@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, Application } from 'express';
+import express, { Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
 
 import { PrismaClient } from '@prisma/client';
@@ -7,19 +7,33 @@ import { PrismaClient } from '@prisma/client';
 dotenv.config();
 
 const app: Application = express();
-const port = process.env.PORT || 8000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+const port = process.env.PORT || 8000;
 const prisma = new PrismaClient();
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
 
-app.post('/column', (req: Request, res: Response) => {
+app.post('/column', async (req: Request, res: Response) => {
   try {
-    if (req.body.id) {
+    if (!req.body.title) {
+      return res.status(400).json({ message: 'Missing required field: title' });
     }
-  } catch (err) {}
+
+    const newColumn = await prisma.column.create({
+      data: {
+        title: req.body.title,
+      },
+    });
+
+    res.status(200).json(newColumn);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error creating column' });
+  }
 });
 
 app.listen(port, () => {
