@@ -13,3 +13,17 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+
+model Task {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  column    Column @relation(fields: [columnId], references: [id])
+  columnId  String @db.ObjectId
+}
+
+model Column {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  tasks     Task[]
+}
