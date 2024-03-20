@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum TaskStatus {
+enum CardStatus {
   TODO
   IN_PROGRESS
   DONE
@@ -29,18 +29,18 @@ model Board {
 
 model Column {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  title     TaskStatus
+  title     CardStatus
 
   board     Board @relation(fields: [boardId], references: [id])
   boardId   String
 
-  tasks     Task[]
+  cards     Card[]
 }
 
-model Task {
+model Card {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   title     String
-  status    TaskStatus
+  description  String
   column    Column @relation(fields: [columnId], references: [id])
   columnId  String @db.ObjectId
 }

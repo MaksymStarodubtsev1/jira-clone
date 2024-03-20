@@ -86,13 +86,17 @@ export const searchOne = async (req: Request, res: Response) => {
       where: {
         title: req.query.title.toString(),
       },
-      include: { columns: true },
+      include: {
+        columns: {
+          include: { cards: true },
+        },
+      },
     });
 
     if (board) {
       res.status(200).json(board);
     } else {
-      throw new Error()
+      throw new Error();
     }
   } catch (err) {
     console.log(err);

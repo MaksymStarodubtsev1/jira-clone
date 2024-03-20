@@ -1,6 +1,7 @@
 import express, { Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
-import { BoardController } from './controllers';
+
+import { CardController, BoardController } from './controllers';
 import { uniqueBoardMiddlevare } from './utils';
 
 //For env File
@@ -21,6 +22,7 @@ app.get('/board', BoardController.searchOne);
 app.patch('/board/:id', uniqueBoardMiddlevare, BoardController.update);
 app.delete('/board/:id', BoardController.remove);
 
+app.post('/card', CardController.create);
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
