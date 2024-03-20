@@ -75,3 +75,27 @@ export const remove = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error board deleting' });
   }
 };
+
+export const searchOne = async (req: Request, res: Response) => {
+  try {
+    if (!req.query.title) {
+      return res.status(400).json({ message: 'Missing required field: title' });
+    }
+
+    const board = await prisma.board.findFirst({
+      where: {
+        title: req.query.title.toString(),
+      },
+      include: { columns: true },
+    });
+
+    if (board) {
+      res.status(200).json(board);
+    } else {
+      throw new Error()
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error appear, no info found' });
+  }
+};
