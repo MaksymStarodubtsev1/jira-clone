@@ -24,6 +24,7 @@ app.delete('/board/:id', BoardController.remove);
 
 app.post('/card', CardController.create);
 app.patch('/card/:id', CardController.update);
+app.delete('/card/:id', CardController.remove);
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
