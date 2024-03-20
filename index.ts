@@ -1,6 +1,7 @@
 import express, { Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
 import { BoardController } from './controllers';
+import { uniqueBoardMiddlevare } from './utils';
 
 //For env File
 dotenv.config();
@@ -15,7 +16,8 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
 
-app.post('/board', BoardController.create);
+app.post('/board', uniqueBoardMiddlevare, BoardController.create);
+app.patch('/board/:id', uniqueBoardMiddlevare, BoardController.update);
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
