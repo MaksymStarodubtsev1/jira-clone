@@ -50,3 +50,28 @@ export const update = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error updating board' });
   }
 };
+
+export const remove = async (req: Request, res: Response) => {
+  try {
+    if (!req.params.id) {
+      return res.status(400).json({ message: 'Missing required field: id' });
+    }
+
+    await prisma.column.deleteMany({
+      where: {
+        boardId: req.params.id,
+      },
+    });
+
+    await prisma.board.delete({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    res.status(200).json('Board successfully deleted');
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error board deleting' });
+  }
+};

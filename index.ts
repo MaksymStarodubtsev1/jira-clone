@@ -18,6 +18,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/board', uniqueBoardMiddlevare, BoardController.create);
 app.patch('/board/:id', uniqueBoardMiddlevare, BoardController.update);
+app.delete('/board/:id', BoardController.remove);
+
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
