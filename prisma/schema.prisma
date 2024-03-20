@@ -22,7 +22,7 @@ enum TaskStatus {
 
 model Board {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
+  title     String @unique
 
   columns   Column[]
 }
