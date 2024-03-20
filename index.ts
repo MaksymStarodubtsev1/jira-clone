@@ -18,7 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/board', uniqueBoardMiddlevare, BoardController.create);
-app.get('/board', BoardController.searchOne);
+app.get('/board', BoardController.getOne);
 app.patch('/board/:id', uniqueBoardMiddlevare, BoardController.update);
 app.delete('/board/:id', BoardController.remove);
 

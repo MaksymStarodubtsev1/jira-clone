@@ -80,7 +80,7 @@ export const remove = async (req: Request, res: Response) => {
   }
 };
 
-export const searchOne = async (req: Request, res: Response) => {
+export const getOne = async (req: Request, res: Response) => {
   try {
     if (!req.query.title) {
       return res.status(400).json({ message: 'Missing required field: title' });
