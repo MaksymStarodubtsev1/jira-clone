@@ -23,6 +23,7 @@ app.patch('/board/:id', uniqueBoardMiddlevare, BoardController.update);
 app.delete('/board/:id', BoardController.remove);
 
 app.post('/card', CardController.create);
+app.patch('/card/:id', CardController.update);
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);
