@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import prisma from '../prisma/client.ts';
+import prisma from '../prisma/client';
 
 export const create = async (req: Request, res: Response) => {
   try {
@@ -19,6 +19,7 @@ export const create = async (req: Request, res: Response) => {
           ],
         },
       },
+      include: { columns: true }
     });
 
     res.status(200).json(newBoard);

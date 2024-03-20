@@ -1,3 +1,3 @@
-import * as BoardController from './BoardController.ts';
+import * as BoardController from './BoardController';
 
 export { BoardController };
