@@ -57,6 +57,10 @@ export const remove = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Missing required field: id' });
     }
 
+    await prisma.card.deleteMany({
+      where: { column: { boardId: { in: [req.params.id] } } },
+    });
+
     await prisma.column.deleteMany({
       where: {
         boardId: req.params.id,
