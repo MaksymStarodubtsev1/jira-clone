@@ -21,7 +21,7 @@ export const create = async (req: Request, res: Response) => {
     res.status(200).json(newCard);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: 'Error creating board' });
+    res.status(500).json({ message: 'Error creating card' });
   }
 };
 
