@@ -1,3 +1,3 @@
-import uniqueBoardMiddlevare from './uniqueBoardMiddlevare';
+import uniqueBoardMiddleware from './uniqueBoardMiddleware';
 
-export { uniqueBoardMiddlevare };
+export { uniqueBoardMiddleware};

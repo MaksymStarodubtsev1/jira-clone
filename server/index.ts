@@ -2,7 +2,7 @@ import express, { Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
 
 import { CardController, BoardController } from './controllers';
-import { uniqueBoardMiddlevare } from './utils';
+import { uniqueBoardMiddleware } from './utils';
 
 //For env File
 dotenv.config();
@@ -17,9 +17,9 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
 
-app.post('/board', uniqueBoardMiddlevare, BoardController.create);
+app.post('/board', uniqueBoardMiddleware, BoardController.create);
 app.get('/board', BoardController.getOne);
-app.patch('/board/:id', uniqueBoardMiddlevare, BoardController.update);
+app.patch('/board/:id', uniqueBoardMiddleware, BoardController.update);
 app.delete('/board/:id', BoardController.remove);
 
 app.post('/card', CardController.create);
