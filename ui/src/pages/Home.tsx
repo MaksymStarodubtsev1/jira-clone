@@ -1,3 +1,11 @@
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import { CardActionArea } from '@mui/material';
+import { Box } from '@mui/system';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 import styles from './Home.module.scss';
 
 const columns = [
@@ -29,10 +37,24 @@ export const Home = () => {
           <div className={styles.title}>{column.title}</div>
           <div className={styles.content}>
             {column.card?.map((card) => (
-              <div className={styles.card} key={card.id}>
-                <div>{card.title}</div>
-                <div>{card.description}</div>
-              </div>
+              <Box draggble={true}>
+                <Card classes={{ root: styles.card }}>
+                  <CardActionArea>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {card.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {card.description}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small">Share</Button>
+                      <Button size="small">Learn More</Button>
+                    </CardActions>
+                  </CardActionArea>
+                </Card>
+              </Box>
             ))}
           </div>
         </div>
