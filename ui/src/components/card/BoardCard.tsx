@@ -9,41 +9,61 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import styles from './BoardCard.module.scss';
+import { Ticket } from '../../pages/Home';
 
-interface Card {
-  item: { id: number; title: string; description: string };
-  isDragging: boolean;
+export const ItemTypes = {
+  BOX: 'box',
+};
+
+export interface BoardCardProps {
+  item: Ticket;
+  setColumn: any;
 }
 
-export const BoardCard: FC<Card> = ({ item, isDragging }) => {
-  const [{ opacity }, dragRef] = useDrag(
-    () => ({
-      type: 'string',
-      item: item,
-      collect: (monitor: any) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1,
-      }),
+export const BoardCard: FC<BoardCardProps> = ({ item, setColumn }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.BOX,
+    item: item,
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult<Ticket>();
+      if (item && dropResult) {
+        setColumn((columnList) => {
+          return columnList.map((column) => {
+            if (column.id === dropResult.id) {
+              return {...column, tickets: [
+                ...column?.tickets, item
+              ]}
+            }
+
+            return column
+          })
+        })
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
     }),
-    []
-  );
+  }));
+
+  const opacity = isDragging ? 0.4 : 1;
+
   return (
-    <div ref={dragRef} style={{ opacity }}>
-      <Card classes={{ root: styles.card }}>
-        <CardActionArea>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {item.title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {item.description}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Share</Button>
-            <Button size="small">Learn More</Button>
-          </CardActions>
-        </CardActionArea>
-      </Card>
-    </div>
+    <Card classes={{ root: styles.card }} ref={drag} style={{ opacity }}>
+      <CardActionArea>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {item.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {item.description}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small">Share</Button>
+          <Button size="small">Learn More</Button>
+        </CardActions>
+      </CardActionArea>
+    </Card>
   );
 };
