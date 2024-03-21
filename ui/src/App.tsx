@@ -1,9 +1,11 @@
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
 
+import { Home } from './pages/Home';
+
 function App() {
   return (
     <ScopedCssBaseline>
-      <div>f</div>
+      <Home />
     </ScopedCssBaseline>
   );
 }
