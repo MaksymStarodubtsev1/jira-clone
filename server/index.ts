@@ -1,4 +1,5 @@
 import express, { Request, Response, Application } from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 
 import { CardController, BoardController } from './controllers';
@@ -8,6 +9,12 @@ import { uniqueBoardMiddleware } from './utils';
 dotenv.config();
 
 const app: Application = express();
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
