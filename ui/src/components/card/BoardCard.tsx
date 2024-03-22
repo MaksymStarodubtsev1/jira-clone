@@ -126,7 +126,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
       <CardActionArea>
         <CardContent>
           <EasyEdit
-            allowEdit={isEditable}  
+            allowEdit={isEditable}
             type={Types.TEXT}
             onSave={setTitle}
             value={title}

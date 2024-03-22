@@ -1,13 +1,11 @@
-import { useState } from 'react';
-
+import { BoardColumn } from '../column/BoardColumn';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Home.module.scss';
 import { useQuery } from 'react-query';
-import { getBoard } from '../../apis/Board';
-import Autocomplete from '@mui/material/Autocomplete';
-import { Board } from '../components/board';
+import { getBoard } from '../../../apis/Board';
+import { FC } from 'react';
 
 export interface Ticket {
   id: string;
@@ -15,14 +13,12 @@ export interface Ticket {
   description: string;
 }
 
-export const Home = () => {
-  const [currentBoardId, setCurrentBoardId] = useState(
-    '65fafadee946d357eafb45de'
-  );
-  const [search, setSearch] = useState('');
+interface BoardProps {
+  boardId: string;
+}
 
-  const boardQuery = useQuery('board', () => getBoard(currentBoard));
-  const boardsQuery = useQuery('boards', () => getBoard(search));
+export const Board: FC<BoardProps> = ({ boardId }) => {
+  const boardQuery = useQuery('board', () => getBoard(boardId));
 
   const isLoading = boardQuery.isLoading;
   const isError = boardQuery.isError;
@@ -46,12 +42,17 @@ export const Home = () => {
     );
   }
 
-  const columnsList = boardsQuery.data?.data.columns;
+  const columnsList = boardQuery.data?.data.columns;
 
   return (
     <div className={styles.root}>
       {columnsList?.map((column, index) => (
-      <Board boardId={currentBoardId} />
+        <BoardColumn
+          key={column.id}
+          column={column}
+          canAddTicket={index === 0}
+        ></BoardColumn>
+      ))}
     </div>
   );
 };
