@@ -2,7 +2,7 @@ import { BoardColumn } from '../column/BoardColumn';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import styles from './Home.module.scss';
+import styles from './Board.module.scss';
 import { useQuery } from 'react-query';
 import { getBoard } from '../../../apis/Board';
 import { FC } from 'react';
@@ -18,6 +18,8 @@ interface BoardProps {
 }
 
 export const Board: FC<BoardProps> = ({ boardId }) => {
+    console.log('boardId', boardId);
+    
   const boardQuery = useQuery('board', () => getBoard(boardId));
 
   const isLoading = boardQuery.isLoading;
