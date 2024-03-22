@@ -45,7 +45,6 @@ export const Home = () => {
         <BoardColumn
           key={column.id}
           column={column}
-          setColumn={() => {}}
         ></BoardColumn>
       ))}
     </div>

@@ -20,7 +20,6 @@ export const ItemTypes = {
 
 export interface BoardCardProps {
   item: Ticket;
-  setColumn: any;
 }
 
 export const BoardCard: FC<BoardCardProps> = ({ item }) => {

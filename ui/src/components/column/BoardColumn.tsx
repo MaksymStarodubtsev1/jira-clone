@@ -4,6 +4,7 @@ import { useDrop } from 'react-dnd';
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../card/BoardCard';
 import { Ticket } from '../../pages/Home';
+import Button from '@mui/material/Button';
 
 export const ItemTypes = {
   BOX: 'box',
@@ -15,13 +16,12 @@ interface BoardColumnProps {
     title: string;
     cards?: Ticket[];
   };
-  setColumn: any;
 }
 
-export const BoardColumn: FC<BoardColumnProps> = ({ column, setColumn }) => {
+export const BoardColumn: FC<BoardColumnProps> = ({ column }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.BOX,
-    drop: () => (column),
+    drop: () => column,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -37,12 +37,18 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, setColumn }) => {
   }
 
   return (
-    <div className={styles.column} key={column.id} ref={drop} style={{ backgroundColor }}>
+    <div
+      className={styles.column}
+      key={column.id}
+      ref={drop}
+      style={{ backgroundColor }}
+    >
       <div className={styles.title}>{column.title}</div>
       <div className={styles.content}>
         {column.cards?.map((ticket: Ticket) => (
-          <BoardCard key={ticket.id} item={ticket} setColumn={setColumn}/>
+          <BoardCard key={ticket.id} item={ticket} />
         ))}
+        {<Button variant="outlined">Add new ticket</Button>}
       </div>
     </div>
   );
