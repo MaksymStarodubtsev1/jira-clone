@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import { BoardColumn } from '../components/column/BoardColumn';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Home.module.scss';
 import { useQuery } from 'react-query';
-import { getBoards } from '../../apis/Board';
+import { getBoard } from '../../apis/Board';
 
 const columns = [
   {
@@ -35,17 +34,24 @@ export interface Ticket {
 }
 
 export const Home = () => {
-  const boardsQuery = useQuery('boards', getBoards);
+  const boardsQuery = useQuery('board', getBoard);
 
-  if (boardsQuery.isError) {
+  const isLoading = boardsQuery.isLoading;
+  const isError = boardsQuery.isError;
+
+  if (isError) {
     return <Alert severity="error">This is an error Alert.</Alert>;
   }
 
-  if (boardsQuery.isLoading) {
+  if (isLoading) {
     return (
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme: any) => theme.zIndex.drawer + 1 }}
-        open={boardsQuery.isLoading}
+        sx={{
+          color: '#fff',
+          opacity: 0.4,
+          zIndex: (theme: any) => theme.zIndex.drawer + 1,
+        }}
+        open={isLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>

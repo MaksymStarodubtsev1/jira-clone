@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useDrag } from 'react-dnd';
+import { useMutation } from 'react-query';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -9,7 +10,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import styles from './BoardCard.module.scss';
+import { moveCardToColumnById } from '../../../apis/Card';
 import { Ticket } from '../../pages/Home';
+import { queryClient } from '../../../core/http-client';
 
 export const ItemTypes = {
   BOX: 'box',
@@ -20,14 +23,23 @@ export interface BoardCardProps {
   setColumn: any;
 }
 
-export const BoardCard: FC<BoardCardProps> = ({ item, setColumn }) => {
+export const BoardCard: FC<BoardCardProps> = ({ item }) => {
+  const moveCardToColumnMutation = useMutation(moveCardToColumnById, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('board');
+    },
+  });
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.BOX,
     item: item,
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<Ticket>();
       if (item && dropResult) {
-        alert(`column id ${dropResult.id}, card id ${item.id}`)
+        moveCardToColumnMutation.mutate({
+          columnId: dropResult.id,
+          cardId: item.id,
+        });
       }
     },
     collect: (monitor) => ({
