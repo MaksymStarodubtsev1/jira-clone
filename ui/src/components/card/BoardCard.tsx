@@ -6,11 +6,15 @@ import EasyEdit, { Types } from 'react-easy-edit';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea, TextField } from '@mui/material';
+import { CardActionArea } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import styles from './BoardCard.module.scss';
-import { deleteCardById, editCardById, moveCardToColumnById } from '../../../apis/Card';
+import {
+  deleteCardById,
+  editCardById,
+  moveCardToColumnById,
+} from '../../../apis/Card';
 import { Ticket } from '../../pages/Home';
 import { queryClient } from '../../../core/http-client';
 
@@ -68,7 +72,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   };
 
   const handleRemoveCard = () => {
-    deleteCardMutation.mutate(item.id)
+    deleteCardMutation.mutate(item.id);
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -122,10 +126,11 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
       <CardActionArea>
         <CardContent>
           <EasyEdit
-            allowEdit={isEditable}
+            allowEdit={isEditable}  
             type={Types.TEXT}
             onSave={setTitle}
             value={title}
+            cssClassPrefix={styles.easyEditInput}
             saveButtonLabel="Save"
             cancelButtonLabel="Cancel"
           />
@@ -134,6 +139,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
             type={Types.TEXT}
             onSave={setDescription}
             value={description}
+            cssClassPrefix={styles.easyEditInput}
             saveButtonLabel="Save"
             cancelButtonLabel="Cancel"
           />
