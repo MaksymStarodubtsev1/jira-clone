@@ -84,13 +84,13 @@ export const remove = async (req: Request, res: Response) => {
 
 export const getOne = async (req: Request, res: Response) => {
   try {
-    if (!req.query.title) {
-      return res.status(400).json({ message: 'Missing required field: title' });
+    if (!req.query.id) {
+      return res.status(400).json({ message: 'Missing required field: id' });
     }
 
-    const board = await prisma.board.findFirst({
+    const board = await prisma.board.findUnique({
       where: {
-        title: req.query.title.toString(),
+        id: req.query.id.toString(),
       },
       include: {
         columns: {
