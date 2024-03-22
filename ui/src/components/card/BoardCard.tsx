@@ -1,13 +1,13 @@
-import { FC } from 'react';
+import { FC, useState, useMemo } from 'react';
 import { useDrag } from 'react-dnd';
 import { useMutation } from 'react-query';
+import EasyEdit, { Types } from 'react-easy-edit';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea } from '@mui/material';
+import { CardActionArea, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
 import styles from './BoardCard.module.scss';
 import { moveCardToColumnById } from '../../../apis/Card';
@@ -24,11 +24,26 @@ export interface BoardCardProps {
 }
 
 export const BoardCard: FC<BoardCardProps> = ({ item }) => {
+  const [isEditable, setIsEditable] = useState(false);
+  const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
+
   const moveCardToColumnMutation = useMutation(moveCardToColumnById, {
     onSuccess: () => {
       queryClient.invalidateQueries('board');
     },
   });
+
+  const handleEdit = () => setIsEditable(true);
+  const handleCancelEdit = () => setIsEditable(false);
+
+  const handleUpdateCard = () => {
+    handleCancelEdit();
+  };
+
+  const handleRemoveCard = () => {
+    handleCancelEdit();
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.BOX,
@@ -50,21 +65,54 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
 
   const opacity = isDragging ? 0.4 : 1;
 
+  const buttonContent = useMemo(() => {
+    if (isEditable) {
+      return (
+        <CardActions>
+          <Button size="small" onClick={handleUpdateCard}>
+            Save
+          </Button>
+          <Button size="small" onClick={handleCancelEdit}>
+            Cancel
+          </Button>
+        </CardActions>
+      );
+    } else {
+      return (
+        <CardActions>
+          <Button size="small" onClick={handleEdit}>
+            Edit
+          </Button>
+          <Button size="small" onClick={handleRemoveCard}>
+            Delete
+          </Button>
+        </CardActions>
+      );
+    }
+  }, [isEditable]);
+
   return (
     <Card classes={{ root: styles.card }} ref={drag} style={{ opacity }}>
       <CardActionArea>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {item.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {item.description}
-          </Typography>
+          <EasyEdit
+            allowEdit={isEditable}
+            type={Types.TEXT}
+            onSave={setTitle}
+            value={title}
+            saveButtonLabel="Save"
+            cancelButtonLabel="Cancel"
+          />
+          <EasyEdit
+            allowEdit={isEditable}
+            type={Types.TEXT}
+            onSave={setDescription}
+            value={description}
+            saveButtonLabel="Save"
+            cancelButtonLabel="Cancel"
+          />
         </CardContent>
-        <CardActions>
-          <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button>
-        </CardActions>
+        {buttonContent}
       </CardActionArea>
     </Card>
   );

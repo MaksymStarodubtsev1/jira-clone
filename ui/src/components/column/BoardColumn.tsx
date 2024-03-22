@@ -28,8 +28,6 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, setColumn }) => {
     }),
   }));
 
-  console.log(column);
-
   const isActive = canDrop && isOver;
   let backgroundColor = '#ccc';
   if (isActive) {
