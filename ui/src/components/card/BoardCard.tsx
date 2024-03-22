@@ -10,7 +10,7 @@ import { CardActionArea, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import styles from './BoardCard.module.scss';
-import { editCardById, moveCardToColumnById } from '../../../apis/Card';
+import { deleteCardById, editCardById, moveCardToColumnById } from '../../../apis/Card';
 import { Ticket } from '../../pages/Home';
 import { queryClient } from '../../../core/http-client';
 
@@ -40,6 +40,12 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
     },
   });
 
+  const deleteCardMutation = useMutation(deleteCardById, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('board');
+    },
+  });
+
   const handleEdit = () => setIsEditable(true);
   const handleCancelEdit = () => setIsEditable(false);
 
@@ -63,7 +69,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   };
 
   const handleRemoveCard = () => {
-    handleCancelEdit();
+    deleteCardMutation.mutate(item.id)
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({

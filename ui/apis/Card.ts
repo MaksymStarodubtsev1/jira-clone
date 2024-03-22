@@ -21,3 +21,7 @@ export const moveCardToColumnById = ({
 export const editCardById = (card: updatedCard) => {
   return $http.patch(`/card/${card.id}`, card.details);
 };
+
+export const deleteCardById = (cardId: string) => {
+  return $http.delete(`/card/${cardId}`);
+};
