@@ -41,10 +41,11 @@ export const Home = () => {
 
   return (
     <div className={styles.root}>
-      {columnsList?.map((column) => (
+      {columnsList?.map((column, index) => (
         <BoardColumn
           key={column.id}
           column={column}
+          canAddTicket={index === 0}
         ></BoardColumn>
       ))}
     </div>
