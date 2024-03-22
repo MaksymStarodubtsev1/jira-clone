@@ -2,6 +2,11 @@ import { getHTTPClient } from '../core/http-client';
 
 const $http = getHTTPClient();
 
+interface updatedCard {
+  id: string;
+  details: { title: string; description: string };
+}
+
 export const moveCardToColumnById = ({
   columnId,
   cardId,
@@ -11,4 +16,8 @@ export const moveCardToColumnById = ({
   return $http.patch(`/card/${cardId}`, {
     columnId: columnId,
   });
+};
+
+export const editCardById = (card: updatedCard) => {
+  return $http.patch(`/card/${card.id}`, card.details);
 };

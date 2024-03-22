@@ -10,7 +10,7 @@ import { CardActionArea, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import styles from './BoardCard.module.scss';
-import { moveCardToColumnById } from '../../../apis/Card';
+import { editCardById, moveCardToColumnById } from '../../../apis/Card';
 import { Ticket } from '../../pages/Home';
 import { queryClient } from '../../../core/http-client';
 
@@ -25,10 +25,16 @@ export interface BoardCardProps {
 
 export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   const [isEditable, setIsEditable] = useState(false);
-  const [title, setTitle] = useState(item.title);
-  const [description, setDescription] = useState(item.description);
+  const [title, setTitle] = useState<string>(item.title);
+  const [description, setDescription] = useState<string>(item.description);
 
   const moveCardToColumnMutation = useMutation(moveCardToColumnById, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('board');
+    },
+  });
+
+  const editCardMutation = useMutation(editCardById, {
     onSuccess: () => {
       queryClient.invalidateQueries('board');
     },
@@ -38,6 +44,21 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   const handleCancelEdit = () => setIsEditable(false);
 
   const handleUpdateCard = () => {
+    editCardMutation.mutate(
+      {
+        id: item.id,
+        details: {
+          title,
+          description,
+        },
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries('board');
+        },
+      }
+    );
+
     handleCancelEdit();
   };
 
@@ -89,7 +110,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
         </CardActions>
       );
     }
-  }, [isEditable]);
+  }, [isEditable, title, description]);
 
   return (
     <Card classes={{ root: styles.card }} ref={drag} style={{ opacity }}>
