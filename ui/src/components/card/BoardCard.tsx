@@ -27,17 +27,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item, setColumn }) => {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<Ticket>();
       if (item && dropResult) {
-        setColumn((columnList) => {
-          return columnList.map((column) => {
-            if (column.id === dropResult.id) {
-              return {...column, tickets: [
-                ...column?.tickets, item
-              ]}
-            }
-
-            return column
-          })
-        })
+        alert(`column id ${dropResult.id}, card id ${item.id}`)
       }
     },
     collect: (monitor) => ({

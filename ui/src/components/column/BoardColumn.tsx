@@ -11,9 +11,9 @@ export const ItemTypes = {
 
 interface BoardColumnProps {
   column: {
-    id: number;
+    id: string;
     title: string;
-    tickets?: Ticket[];
+    cards?: Ticket[];
   };
   setColumn: any;
 }
@@ -28,6 +28,8 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, setColumn }) => {
     }),
   }));
 
+  console.log(column);
+
   const isActive = canDrop && isOver;
   let backgroundColor = '#ccc';
   if (isActive) {
@@ -40,7 +42,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, setColumn }) => {
     <div className={styles.column} key={column.id} ref={drop} style={{ backgroundColor }}>
       <div className={styles.title}>{column.title}</div>
       <div className={styles.content}>
-        {column.tickets?.map((ticket: Ticket) => (
+        {column.cards?.map((ticket: Ticket) => (
           <BoardCard key={ticket.id} item={ticket} setColumn={setColumn}/>
         ))}
       </div>

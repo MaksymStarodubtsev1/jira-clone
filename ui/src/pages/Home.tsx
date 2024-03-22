@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { BoardColumn } from '../components/column/BoardColumn';
+import Alert from '@mui/material/Alert';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Home.module.scss';
 import { useQuery } from 'react-query';
 import { getBoards } from '../../apis/Board';
@@ -26,22 +29,39 @@ const columns = [
 ];
 
 export interface Ticket {
-  id: number;
+  id: string;
   title: string;
   description: string;
 }
 
 export const Home = () => {
-  const [columnList, setColumnList] = useState<any>(columns);
+  const boardsQuery = useQuery('boards', getBoards);
 
-  const query = useQuery('todos', getBoards);
+  if (boardsQuery.isError) {
+    return <Alert severity="error">This is an error Alert.</Alert>;
+  }
 
-  console.log(query)
+  if (boardsQuery.isLoading) {
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme: any) => theme.zIndex.drawer + 1 }}
+        open={boardsQuery.isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
+
+  const columnsList = boardsQuery.data?.data.columns;
 
   return (
     <div className={styles.root}>
-      {columnList?.map((column) => (
-        <BoardColumn column={column} setColumn={setColumnList}></BoardColumn>
+      {columnsList?.map((column) => (
+        <BoardColumn
+          key={column.id}
+          column={column}
+          setColumn={() => {}}
+        ></BoardColumn>
       ))}
     </div>
   );
