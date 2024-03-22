@@ -73,7 +73,7 @@ export const remove = async (req: Request, res: Response) => {
       },
     });
 
-    await prisma.$transaction([deleteCards, deleteColumns, deleteBoard])
+    await prisma.$transaction([deleteCards, deleteColumns, deleteBoard]);
 
     res.status(200).json('Board successfully deleted');
   } catch (err) {
@@ -95,6 +95,32 @@ export const getOne = async (req: Request, res: Response) => {
       include: {
         columns: {
           include: { cards: true },
+        },
+      },
+    });
+
+    if (board) {
+      res.status(200).json(board);
+    } else {
+      throw new Error();
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Error appear, no info found' });
+  }
+};
+
+export const getMany = async (req: Request, res: Response) => {
+  try {
+    if (!req.query.title) {
+      return res.status(400).json({ message: 'Missing required field: title' });
+    }
+
+    const board = await prisma.board.findMany({
+      where: {
+        title: {
+          startsWith: req.query.title.toString(),
+          mode: 'insensitive',
         },
       },
     });

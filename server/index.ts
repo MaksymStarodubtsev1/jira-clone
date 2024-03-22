@@ -26,6 +26,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/board', uniqueBoardMiddleware, BoardController.create);
 app.get('/board', BoardController.getOne);
+app.get('/boards', BoardController.getMany);
 app.patch('/board/:id', uniqueBoardMiddleware, BoardController.update);
 app.delete('/board/:id', BoardController.remove);
 
