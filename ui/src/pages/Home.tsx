@@ -6,27 +6,6 @@ import styles from './Home.module.scss';
 import { useQuery } from 'react-query';
 import { getBoard } from '../../apis/Board';
 
-const columns = [
-  {
-    id: 1,
-    title: 'todo',
-    tickets: [
-      {
-        id: 11,
-        title: 'Title text',
-        description: 'Description text',
-      },
-      {
-        id: 12,
-        title: 'Title text',
-        description: 'Description text',
-      },
-    ],
-  },
-  { id: 2, title: 'in progress', tickets: [] },
-  { id: 3, title: 'done', tickets: [] },
-];
-
 export interface Ticket {
   id: string;
   title: string;
