@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BoardColumn } from '../components/column/BoardColumn';
 import styles from './Home.module.scss';
+import { useQuery } from 'react-query';
+import { getBoards } from '../../apis/Board';
 
 const columns = [
   {
@@ -19,8 +21,8 @@ const columns = [
       },
     ],
   },
-  { id: 2, title: 'in progress',  tickets: []},
-  { id: 3, title: 'done',  tickets: [] },
+  { id: 2, title: 'in progress', tickets: [] },
+  { id: 3, title: 'done', tickets: [] },
 ];
 
 export interface Ticket {
@@ -30,7 +32,11 @@ export interface Ticket {
 }
 
 export const Home = () => {
-  const [columnList, setColumnList] = useState<any>(columns)
+  const [columnList, setColumnList] = useState<any>(columns);
+
+  const query = useQuery('todos', getBoards);
+
+  console.log(query)
 
   return (
     <div className={styles.root}>
