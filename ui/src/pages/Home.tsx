@@ -6,6 +6,7 @@ import { BoardAutocomplete } from '../components/autocomplete';
 import { useQuery } from 'react-query';
 
 import { getBoards } from '../../apis/Board';
+import { useDebounce } from '../utils';
 
 export interface Ticket {
   id: string;
@@ -17,11 +18,17 @@ export const Home = () => {
   const [currentBoardId, setCurrentBoardId] = useState(
     '65fafadee946d357eafb45de'
   );
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>();
 
-  const boardsQuery = useQuery(['boards', search], () => getBoards(search), {
-    enabled: !!search,
-  });
+  const searchValue = useDebounce(search);
+
+  const boardsQuery = useQuery(
+    ['boards', searchValue],
+    () => getBoards(searchValue),
+    {
+      enabled: !!searchValue,
+    }
+  );
 
   const options = boardsQuery.data?.data || [];
   return (

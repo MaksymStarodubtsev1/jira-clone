@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 export interface BoardAutocompleteProps {
   optionsList: any[];
   loading: boolean;
-  search: string;
+  search?: string;
   boardId: string;
   setSearch: (value: string) => void;
   setCurrentBoardId: (value: string) => void;
