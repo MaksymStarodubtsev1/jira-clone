@@ -10,7 +10,6 @@ export interface BoardAutocompleteProps {
   optionsList: any[];
   loading: boolean;
   search?: string;
-  boardId: string;
   setSearch: (value: string) => void;
   setCurrentBoardId: (value: string) => void;
 }
@@ -20,7 +19,6 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
   loading,
   search = '',
   setSearch,
-  boardId,
   setCurrentBoardId,
 }) => {
   const [open, setOpen] = useState(false);
@@ -41,8 +39,11 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
         onClose={() => {
           setOpen(false);
         }}
+        onChange={(_: any, newValue: any) => {
+          setCurrentBoardId(newValue.id);
+        }}
         inputValue={search}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_, newInputValue) => {
           setSearch(newInputValue);
         }}
         isOptionEqualToValue={(option, value) => option.title === value.title}

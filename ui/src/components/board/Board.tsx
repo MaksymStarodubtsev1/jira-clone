@@ -18,9 +18,9 @@ interface BoardProps {
 }
 
 export const Board: FC<BoardProps> = ({ boardId }) => {
-    console.log('boardId', boardId);
-    
-  const boardQuery = useQuery('board', () => getBoard(boardId));
+  const boardQuery = useQuery(['board', boardId], () => getBoard(boardId), {
+    enabled: !!boardId,
+  });
 
   const isLoading = boardQuery.isLoading;
   const isError = boardQuery.isError;
@@ -44,11 +44,11 @@ export const Board: FC<BoardProps> = ({ boardId }) => {
     );
   }
 
-  const columnsList = boardQuery.data?.data.columns;
+  const columnsList = boardQuery.data?.data.columns || [];
 
   return (
     <div className={styles.root}>
-      {columnsList?.map((column, index) => (
+      {columnsList.map((column, index) => (
         <BoardColumn
           key={column.id}
           column={column}

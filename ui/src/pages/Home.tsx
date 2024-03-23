@@ -20,7 +20,7 @@ export const Home = () => {
   );
   const [search, setSearch] = useState<string>();
 
-  const searchValue = useDebounce(search);
+  const searchValue = useDebounce(search?.trim());
 
   const boardsQuery = useQuery(
     ['boards', searchValue],
@@ -38,7 +38,6 @@ export const Home = () => {
         loading={boardsQuery.isLoading}
         search={search}
         setSearch={setSearch}
-        boardId={currentBoardId}
         setCurrentBoardId={setCurrentBoardId}
       />
       <Board boardId={currentBoardId} />
