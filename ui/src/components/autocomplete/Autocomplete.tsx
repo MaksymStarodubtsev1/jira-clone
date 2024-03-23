@@ -1,15 +1,14 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
-import Alert from '@mui/material/Alert';
-import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useQuery } from 'react-query';
-import { getBoards } from '../../../apis/Board';
+import styles from './Autocomplete.module.scss';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import TextField from '@mui/material/TextField';
 
 export interface BoardAutocompleteProps {
+  optionsList: any[];
+  loading: boolean;
   search: string;
   boardId: string;
   setSearch: (value: string) => void;
@@ -17,53 +16,57 @@ export interface BoardAutocompleteProps {
 }
 
 export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
+  optionsList = [],
+  loading,
   search = '',
   setSearch,
   boardId,
   setCurrentBoardId,
 }) => {
-  const [value, setValue] = useState('');
-  const boardsQuery = useQuery('boards', () => getBoards(search), {
-    enabled: search.length > 2,
-    staleTime: 1000 * 5,
-  });
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] =
+    useState<{ title: string; id: string }[]>(optionsList);
 
-  const isLoading = boardsQuery.isLoading;
-  const isError = boardsQuery.isError;
-
-  if (isError) {
-    return <Alert severity="error">This is an error Alert.</Alert>;
-  }
-
-  if (isLoading) {
-    return (
-      <Backdrop
-        sx={{
-          color: '#fff',
-          opacity: 0.4,
-          zIndex: (theme: any) => theme.zIndex.drawer + 1,
-        }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
-  }
-
-  const boardsList = boardsQuery.data?.data ?? [];
+  useEffect(() => {
+    setOptions(optionsList);
+  }, [optionsList]);
 
   return (
-    <Autocomplete
-      value={value}
-      onChange={(f: any, newValue: string | null) => {
-        setValue(newValue);
-      }}
-      inputValue={search}
-      onInputChange={(event, newInputValue) => {
-        setSearch(newInputValue);
-      }}
-      options={boardsList.map((option) => option.title)}
-      renderInput={(params) => <TextField {...params} label="Board search" />}
-    />
+    <div className={styles.root}>
+      <Autocomplete
+        open={open}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        inputValue={search}
+        onInputChange={(event, newInputValue) => {
+          setSearch(newInputValue);
+        }}
+        isOptionEqualToValue={(option, value) => option.title === value.title}
+        getOptionLabel={(option) => option.title}
+        options={options}
+        loading={loading}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Enter a board ID here..."
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
+      />
+    </div>
   );
 };
