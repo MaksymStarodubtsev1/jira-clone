@@ -1,10 +1,10 @@
-import { BoardColumn } from '../column/BoardColumn';
+import { BoardColumn } from './components/column/BoardColumn';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Board.module.scss';
 import { useQuery } from 'react-query';
-import { getBoard } from '../../../apis/Board';
+import { getBoard } from '../../apis/Board';
 import { FC } from 'react';
 
 export interface Ticket {

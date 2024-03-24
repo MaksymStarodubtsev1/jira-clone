@@ -1,10 +1,10 @@
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 
 import { Home } from './pages/Home';
-import { queryClient } from '../core/http-client';
+import { queryClient } from '../src/core/http-client';
 
 function App() {
   return (

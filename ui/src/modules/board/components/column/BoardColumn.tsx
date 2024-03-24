@@ -12,10 +12,10 @@ import {
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../card/BoardCard';
-import { Ticket } from '../../pages/Home';
-import { queryClient } from '../../../core/http-client';
+import { Ticket } from '../../../../pages/Home/Home';
+import { queryClient } from '../../../../core/http-client';
 import { useMutation } from 'react-query';
-import { createCardInColumn } from '../../../apis/Card';
+import { createCardInColumn } from '../../../../apis/Card';
 import type { PaperProps } from '@mui/material';
 
 export const ItemTypes = {

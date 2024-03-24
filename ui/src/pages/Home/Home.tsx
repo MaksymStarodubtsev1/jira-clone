@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import styles from './Home.module.scss';
-import { Board } from '../components/board';
-import { BoardAutocomplete } from '../components/autocomplete';
+import { Board } from '../../modules/board/Board';
+import { BoardAutocomplete } from '../../shared/components/autocomplete';
 import { useMutation, useQuery } from 'react-query';
 
 import { createBoard, getBoards } from '../../apis/Board';
-import { useDebounce } from '../utils';
+import { useDebounce } from '../../utils';
 import {
   Button,
   DialogTitle,

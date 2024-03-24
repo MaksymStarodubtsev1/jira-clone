@@ -14,9 +14,9 @@ import {
   deleteCardById,
   editCardById,
   moveCardToColumnById,
-} from '../../../apis/Card';
-import { Ticket } from '../../pages/Home';
-import { queryClient } from '../../../core/http-client';
+} from '../../../../apis/Card';
+import { Ticket } from '../../../../pages/Home/Home';
+import { queryClient } from '../../../../core/http-client';
 
 export const ItemTypes = {
   BOX: 'box',
