@@ -11,7 +11,8 @@ export interface BoardAutocompleteProps {
   loading: boolean;
   search?: string;
   setSearch: (value: string) => void;
-  setCurrentBoardId: (value: string) => void;
+  currentBoard: string;
+  setCurrentBoardId: (value: any) => void;
 }
 
 export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
@@ -19,7 +20,8 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
   loading,
   search = '',
   setSearch,
-  setCurrentBoardId,
+  currentBoard,
+  setCurrentBoard,
 }) => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] =
@@ -40,7 +42,7 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
           setOpen(false);
         }}
         onChange={(_: any, newValue: any) => {
-          setCurrentBoardId(newValue.id);
+          setCurrentBoard(newValue);
         }}
         inputValue={search}
         onInputChange={(_, newInputValue) => {

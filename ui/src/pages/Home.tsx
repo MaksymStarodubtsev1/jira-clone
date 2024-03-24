@@ -26,9 +26,7 @@ export interface Ticket {
 }
 
 export const Home = () => {
-  const [currentBoardId, setCurrentBoardId] = useState(
-    '65fafadee946d357eafb45de'
-  );
+  const [currentBoard, setCurrentBoard] = useState(null);
   const [search, setSearch] = useState<string>();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -79,7 +77,8 @@ export const Home = () => {
         loading={boardsQuery.isLoading}
         search={search}
         setSearch={setSearch}
-        setCurrentBoardId={setCurrentBoardId}
+        currentBoard={currentBoard}
+        setCurrentBoard={setCurrentBoard}
       />
       <Button onClick={() => setIsCreateModalOpen(true)}>
         Create new board
@@ -108,7 +107,7 @@ export const Home = () => {
           <Button type="submit">Create</Button>
         </DialogActions>
       </Dialog>
-      <Board boardId={currentBoardId} />
+      <Board boardId={currentBoard?.id ?? ''} />
     </div>
   );
 };
