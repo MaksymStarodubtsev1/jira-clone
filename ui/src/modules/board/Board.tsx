@@ -7,6 +7,7 @@ import { CreateBoardModal } from './components/create-board-modal';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { getBoards } from '../../apis/Board';
 import { useDebounce } from '../../utils';
+import { UpdateBoardModal } from './components/update-board-modal';
 
 export interface Ticket {
   id: string;
@@ -15,7 +16,7 @@ export interface Ticket {
 }
 
 export const Home = () => {
-  const [currentBoard, setCurrentBoard] = useState({ id: null });
+  const [currentBoard, setCurrentBoard] = useState<{id: string, title: string}>();
   const [search, setSearch] = useState<string>();
 
   const searchValue = useDebounce(search?.trim());
@@ -40,8 +41,14 @@ export const Home = () => {
         setSearch={setSearch}
         setValue={setCurrentBoard}
       />
-      <CreateBoardModal />
-      <BoardView boardId={currentBoard?.id || ''} />
+      <div className={styles.boardActions}>
+        <UpdateBoardModal
+          board={currentBoard}
+          loading={boardsQuery.isLoading}
+        />
+        <CreateBoardModal />
+      </div>
+      <BoardView boardId={currentBoard?.id} />
     </div>
   );
 };

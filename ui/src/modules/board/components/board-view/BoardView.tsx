@@ -14,7 +14,7 @@ export interface Ticket {
 }
 
 interface BoardProps {
-  boardId: string;
+  boardId?: string;
 }
 
 export const BoardView: FC<BoardProps> = ({ boardId }) => {
