@@ -17,11 +17,7 @@ interface DeleteBoardModalProps {
   setCurrentBoard: SetStateAction<any>;
 }
 
-export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({
-  board,
-  loading,
-  setCurrentBoard,
-}) => {
+export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, setCurrentBoard }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const deleteBoardMutation = useMutation(deleteBoard, {
@@ -35,8 +31,7 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({
   });
 
   const isBoardEmpty = !board;
-  const disabledFields: boolean =
-    isBoardEmpty || loading || deleteBoardMutation.isLoading;
+  const disabledFields: boolean = isBoardEmpty || loading || deleteBoardMutation.isLoading;
 
   const handleDeleteBoard = (board: any) => {
     deleteBoardMutation.mutate(board.id);
@@ -53,13 +48,8 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="error"
-        disabled={disabledFields}
-        onClick={() => setIsDeleteModalOpen(true)}
-      >
-        {isBoardEmpty ? 'Delete' : `Delete ${board.title} board`}
+      <Button variant="contained" color="error" disabled={disabledFields} onClick={() => setIsDeleteModalOpen(true)}>
+        {isBoardEmpty ? 'Delete' : `Delete board`}
       </Button>
       <Dialog
         fullWidth
@@ -79,9 +69,7 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({
           <>
             <DialogTitle>{`Are you sure you whant to delete ${board?.title} board`}</DialogTitle>
             <DialogActions>
-              <Button onClick={() => setIsDeleteModalOpen(false)}>
-                Cancel
-              </Button>
+              <Button onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
               <Button type="submit">Delete</Button>
             </DialogActions>
           </>

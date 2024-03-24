@@ -1,14 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useMutation } from 'react-query';
 
-import {
-  Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Dialog,
-  TextField,
-} from '@mui/material';
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, Typography } from '@mui/material';
 import type { PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
@@ -23,10 +16,7 @@ interface UpdateBoardModalProps {
   loading: boolean;
 }
 
-export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
-  board,
-  loading,
-}) => {
+export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   const updateNewBoardMutation = useMutation(updateBoard, {
@@ -39,8 +29,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
   });
 
   const isBoardEmpty = !board;
-  const disabledFields: boolean =
-    isBoardEmpty || loading || updateNewBoardMutation.isLoading;
+  const disabledFields: boolean = isBoardEmpty || loading || updateNewBoardMutation.isLoading;
 
   const handleUpdateBoard = (board: any) => {
     updateNewBoardMutation.mutate({
@@ -53,9 +42,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
     component: 'form',
     onSubmit: (event) => {
       event.preventDefault();
-      const formData = new FormData(
-        event.currentTarget as unknown as HTMLFormElement
-      );
+      const formData = new FormData(event.currentTarget as unknown as HTMLFormElement);
       const formJson = Object.fromEntries(formData.entries());
       const title = formJson.title as string;
 
@@ -70,7 +57,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
         disabled={disabledFields}
         onClick={() => setIsUpdateModalOpen(true)}
       >
-        {isBoardEmpty ? 'Update' : `Update ${board.title} board`}
+        {isBoardEmpty ? 'Update' : `Update board`}
       </Button>
       <Dialog
         fullWidth
@@ -103,9 +90,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setIsUpdateModalOpen(false)}>
-                Cancel
-              </Button>
+              <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
               <Button type="submit">Update</Button>
             </DialogActions>
           </>
