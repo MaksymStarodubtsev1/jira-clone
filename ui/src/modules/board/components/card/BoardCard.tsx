@@ -1,4 +1,4 @@
-import { FC, useState, useMemo } from 'react';
+import { FC, useState, useMemo, Fragment } from 'react';
 import { useDrag } from 'react-dnd';
 import { useMutation } from 'react-query';
 import EasyEdit, { Types } from 'react-easy-edit';
@@ -10,11 +10,7 @@ import { CardActionArea } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import styles from './BoardCard.module.scss';
-import {
-  deleteCardById,
-  editCardById,
-  moveCardToColumnById,
-} from '../../../../apis/Card';
+import { deleteCardById, editCardById, moveCardToColumnById } from '../../../../apis/Card';
 import { Ticket } from '../../Board';
 import { queryClient } from '../../../../core/http-client';
 
@@ -99,23 +95,23 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
     if (isEditable) {
       return (
         <CardActions>
-          <Button size="small" onClick={handleUpdateCard}>
-            Save
-          </Button>
-          <Button size="small" onClick={handleCancelEdit}>
-            Cancel
-          </Button>
+            <Button size="small" onClick={handleUpdateCard}>
+              Save
+            </Button>
+            <Button size="small" onClick={handleCancelEdit}>
+              Cancel
+            </Button>
         </CardActions>
       );
     } else {
       return (
         <CardActions>
-          <Button size="small" onClick={handleEdit}>
-            Edit
-          </Button>
-          <Button size="small" onClick={handleRemoveCard}>
-            Delete
-          </Button>
+            <Button size="small" onClick={handleEdit}>
+              Edit
+            </Button>
+            <Button size="small" onClick={handleRemoveCard}>
+              Delete
+            </Button>
         </CardActions>
       );
     }
@@ -123,29 +119,27 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
 
   return (
     <Card classes={{ root: styles.root }} ref={drag} style={{ opacity }}>
-      <CardActionArea>
-        <CardContent>
-          <EasyEdit
-            allowEdit={isEditable}
-            type={Types.TEXT}
-            onSave={setTitle}
-            value={title}
-            cssClassPrefix={styles.easyEditInput}
-            saveButtonLabel="Save"
-            cancelButtonLabel="Cancel"
-          />
-          <EasyEdit
-            allowEdit={isEditable}
-            type={Types.TEXT}
-            onSave={setDescription}
-            value={description}
-            cssClassPrefix={styles.easyEditInput}
-            saveButtonLabel="Save"
-            cancelButtonLabel="Cancel"
-          />
-        </CardContent>
-        {buttonContent}
-      </CardActionArea>
+      <CardContent>
+        <EasyEdit
+          allowEdit={isEditable}
+          type={Types.TEXT}
+          onSave={setTitle}
+          value={title}
+          cssClassPrefix={styles.easyEditInput}
+          saveButtonLabel="Save"
+          cancelButtonLabel="Cancel"
+        />
+        <EasyEdit
+          allowEdit={isEditable}
+          type={Types.TEXT}
+          onSave={setDescription}
+          value={description}
+          cssClassPrefix={styles.easyEditInput}
+          saveButtonLabel="Save"
+          cancelButtonLabel="Cancel"
+        />
+      </CardContent>
+      {buttonContent}
     </Card>
   );
 };

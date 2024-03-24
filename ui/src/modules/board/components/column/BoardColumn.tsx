@@ -1,14 +1,7 @@
 import { FC, useState } from 'react';
 import { useDrop } from 'react-dnd';
 
-import {
-  Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Dialog,
-  TextField,
-} from '@mui/material';
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../card/BoardCard';
@@ -31,10 +24,7 @@ interface BoardColumnProps {
   canAddTicket?: boolean;
 }
 
-export const BoardColumn: FC<BoardColumnProps> = ({
-  column,
-  canAddTicket = true,
-}) => {
+export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.BOX,
     drop: () => column,
@@ -56,12 +46,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({
     },
   });
 
-  const handleCreateCard = ({
-    title,
-    description,
-  }: {
-    [key: string]: string;
-  }) => {
+  const handleCreateCard = ({ title, description }: { [key: string]: string }) => {
     deleteCardMutation.mutate({
       columnId: column.id,
       title,
@@ -82,9 +67,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({
     component: 'form',
     onSubmit: (event) => {
       event.preventDefault();
-      const formData = new FormData(
-        event.currentTarget as unknown as HTMLFormElement
-      );
+      const formData = new FormData(event.currentTarget as unknown as HTMLFormElement);
       const formJson = Object.fromEntries(formData.entries());
       const title = formJson.title as string;
       const description = formJson.description as string;
@@ -102,6 +85,8 @@ export const BoardColumn: FC<BoardColumnProps> = ({
       key={column.id}
       ref={drop}
       style={{ backgroundColor }}
+      onClick={() => {}}
+      role="button"
     >
       <div className={styles.title}>{column.title}</div>
       <div className={styles.content}>
@@ -109,19 +94,12 @@ export const BoardColumn: FC<BoardColumnProps> = ({
           <BoardCard key={ticket.id} item={ticket} />
         ))}
         {canAddTicket && (
-          <Button
-            variant="outlined"
-            onClick={() => handleChangeCreateModalVisibility(true)}
-          >
+          <Button variant="outlined" onClick={() => handleChangeCreateModalVisibility(true)}>
             Add new ticket
           </Button>
         )}
       </div>
-      <Dialog
-        open={isCreateModalOpen}
-        onClose={() => handleChangeCreateModalVisibility(false)}
-        PaperProps={paperProps}
-      >
+      <Dialog open={isCreateModalOpen} onClose={() => handleChangeCreateModalVisibility(false)} PaperProps={paperProps}>
         <DialogTitle>Create new ticket</DialogTitle>
         <DialogContent>
           <TextField
@@ -147,9 +125,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleChangeCreateModalVisibility(false)}>
-            Cancel
-          </Button>
+          <Button onClick={() => handleChangeCreateModalVisibility(false)}>Cancel</Button>
           <Button type="submit">Create</Button>
         </DialogActions>
       </Dialog>
