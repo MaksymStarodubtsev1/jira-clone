@@ -122,7 +122,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   }, [isEditable, title, description]);
 
   return (
-    <Card classes={{ root: styles.card }} ref={drag} style={{ opacity }}>
+    <Card classes={{ root: styles.root }} ref={drag} style={{ opacity }}>
       <CardActionArea>
         <CardContent>
           <EasyEdit

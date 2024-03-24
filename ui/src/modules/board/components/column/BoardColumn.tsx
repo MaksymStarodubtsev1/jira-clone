@@ -98,7 +98,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({
 
   return (
     <div
-      className={styles.column}
+      className={styles.root}
       key={column.id}
       ref={drop}
       style={{ backgroundColor }}
