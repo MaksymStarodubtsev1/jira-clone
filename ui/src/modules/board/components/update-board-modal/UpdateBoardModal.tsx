@@ -8,11 +8,15 @@ import {
   DialogActions,
   Dialog,
   TextField,
+  CircularProgress,
+  Box,
 } from '@mui/material';
 import type { PaperProps } from '@mui/material';
 
+import { useDebounce } from '../../../../utils';
 import { queryClient } from '../../../../core/http-client';
 import { updateBoard } from '../../../../apis/Board';
+import { Loading } from '../../../../shared/components/loading';
 
 interface UpdateBoardModalProps {
   board?: {
@@ -32,15 +36,20 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
     onSuccess: () => {
       queryClient.invalidateQueries(['board', board?.id]);
     },
+    onSettled: () => {
+      setIsUpdateModalOpen(false);
+    },
   });
+
+  const isBoardEmpty = !board;
+  const disabledFields: boolean =
+    isBoardEmpty || loading || updateNewBoardMutation.isLoading;
 
   const handleUpdateBoard = (board: any) => {
     updateNewBoardMutation.mutate({
       id: board.id,
       title: board.title,
     });
-
-    setIsUpdateModalOpen(false);
   };
 
   const updateCardModalProps: PaperProps = {
@@ -53,45 +62,56 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
       const formJson = Object.fromEntries(formData.entries());
       const title = formJson.title as string;
 
-      handleUpdateBoard({id: board?.id, title});
+      handleUpdateBoard({ id: board?.id, title });
     },
   };
-
-  const boardExist = !!board;
-
-  const buttonDisabled = !boardExist || loading;
 
   return (
     <>
       <Button
-        disabled={buttonDisabled}
+        disabled={disabledFields}
         onClick={() => setIsUpdateModalOpen(true)}
       >
-        {boardExist ? `Update ${board.title} board` : 'Update'}
+        {isBoardEmpty ? 'Update' : `Update ${board.title} board`}
       </Button>
       <Dialog
+        fullWidth
+        maxWidth={'xs'}
         open={isUpdateModalOpen}
-        onClose={() => setIsUpdateModalOpen(false)}
+        onClose={() => {
+          if (disabledFields) {
+            return;
+          }
+          setIsUpdateModalOpen(false);
+        }}
         PaperProps={updateCardModalProps}
       >
-        <DialogTitle>{`Update ${board?.title} board`}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="title"
-            name="title"
-            label="title"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
-          <Button type="submit">Update</Button>
-        </DialogActions>
+        {updateNewBoardMutation.isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <DialogTitle>{`Update ${board?.title} board`}</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="title"
+                name="title"
+                label="title"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setIsUpdateModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Update</Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </>
   );
