@@ -8,12 +8,9 @@ import {
   DialogActions,
   Dialog,
   TextField,
-  CircularProgress,
-  Box,
 } from '@mui/material';
 import type { PaperProps } from '@mui/material';
 
-import { useDebounce } from '../../../../utils';
 import { queryClient } from '../../../../core/http-client';
 import { updateBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
@@ -69,6 +66,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({
   return (
     <>
       <Button
+        variant="outlined"
         disabled={disabledFields}
         onClick={() => setIsUpdateModalOpen(true)}
       >

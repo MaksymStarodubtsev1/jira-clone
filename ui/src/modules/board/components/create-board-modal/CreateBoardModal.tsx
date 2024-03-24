@@ -13,6 +13,7 @@ import type { PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
 import { createBoard } from '../../../../apis/Board';
+import { Loading } from '../../../../shared/components/loading';
 
 export const CreateBoardModal = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -21,14 +22,17 @@ export const CreateBoardModal = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('board');
     },
+    onSettled: () => {
+      setIsCreateModalOpen(false);
+    },
   });
+
+  const disabledFields = createNewBoardMutation.isLoading;
 
   const handleCreateBoard = (title: string) => {
     createNewBoardMutation.mutate({
       title,
     });
-
-    setIsCreateModalOpen(false);
   };
 
   const createCardModalProps: PaperProps = {
@@ -47,32 +51,53 @@ export const CreateBoardModal = () => {
 
   return (
     <>
-      <Button onClick={() => setIsCreateModalOpen(true)}>
+      <Button
+        variant="contained"
+        color="success"
+        onClick={() => setIsCreateModalOpen(true)}
+      >
         Create new board
       </Button>
       <Dialog
+        fullWidth
+        maxWidth={'xs'}
         open={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          if (disabledFields) {
+            return;
+          }
+
+          setIsCreateModalOpen(false);
+        }}
         PaperProps={createCardModalProps}
       >
-        <DialogTitle>Create new board</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="title"
-            name="title"
-            label="title"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
-          <Button type="submit">Create</Button>
-        </DialogActions>
+        {' '}
+        {disabledFields ? (
+          <Loading />
+        ) : (
+          <>
+            <DialogTitle>Create new board</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="title"
+                name="title"
+                label="title"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setIsCreateModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Create</Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </>
   );

@@ -4,10 +4,11 @@ import { useQuery } from 'react-query';
 import styles from './Board.module.scss';
 import { BoardView } from './components/board-view';
 import { CreateBoardModal } from './components/create-board-modal';
+import { UpdateBoardModal } from './components/update-board-modal';
+import { DeleteBoardModal } from './components/delete-board-modal';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { getBoards } from '../../apis/Board';
 import { useDebounce } from '../../utils';
-import { UpdateBoardModal } from './components/update-board-modal';
 
 export interface Ticket {
   id: string;
@@ -16,7 +17,10 @@ export interface Ticket {
 }
 
 export const Home = () => {
-  const [currentBoard, setCurrentBoard] = useState<{id: string, title: string}>();
+  const [currentBoard, setCurrentBoard] = useState<{
+    id: string;
+    title: string;
+  }>();
   const [search, setSearch] = useState<string>();
 
   const searchValue = useDebounce(search?.trim());
@@ -42,11 +46,16 @@ export const Home = () => {
         setValue={setCurrentBoard}
       />
       <div className={styles.boardActions}>
+        <CreateBoardModal />
         <UpdateBoardModal
           board={currentBoard}
           loading={boardsQuery.isLoading}
         />
-        <CreateBoardModal />
+        <DeleteBoardModal
+          board={currentBoard}
+          loading={boardsQuery.isLoading}
+          setCurrentBoard={setCurrentBoard}
+        />
       </div>
       <BoardView boardId={currentBoard?.id} />
     </div>
