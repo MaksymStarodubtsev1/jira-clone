@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import { CardController, BoardController } from './controllers';
 import { uniqueBoardMiddleware } from './utils';
 
-//For env File
 dotenv.config();
 
 const app: Application = express();
