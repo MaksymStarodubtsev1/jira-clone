@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { QueryClientProvider } from 'react-query';
 
-import { Home } from './pages/Home';
+import { Home } from './modules/board';
 import { queryClient } from '../src/core/http-client';
 
 function App() {

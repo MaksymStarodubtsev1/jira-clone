@@ -12,7 +12,7 @@ import {
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../card/BoardCard';
-import { Ticket } from '../../../../pages/Home/Home';
+import { Ticket } from '../../Board';
 import { queryClient } from '../../../../core/http-client';
 import { useMutation } from 'react-query';
 import { createCardInColumn } from '../../../../apis/Card';
@@ -28,10 +28,13 @@ interface BoardColumnProps {
     title: string;
     cards?: Ticket[];
   };
-  canAddTicket: boolean;
+  canAddTicket?: boolean;
 }
 
-export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket }) => {
+export const BoardColumn: FC<BoardColumnProps> = ({
+  column,
+  canAddTicket = true,
+}) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.BOX,
     drop: () => column,

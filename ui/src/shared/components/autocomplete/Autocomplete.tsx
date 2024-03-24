@@ -2,30 +2,29 @@ import { FC, useEffect, useState } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Autocomplete.module.scss';
-import Autocomplete from '@mui/material/Autocomplete';
+import { Autocomplete as MuiAutocomplite } from '@mui/material';
 
 import TextField from '@mui/material/TextField';
 
-export interface BoardAutocompleteProps {
+export interface AutocompleteProps {
   optionsList: any[];
   loading: boolean;
+  label?: string;
   search?: string;
   setSearch: (value: string) => void;
-  currentBoard: string;
-  setCurrentBoardId: (value: any) => void;
+  setValue: (value: any) => void;
 }
 
-export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
+export const Autocomplete: FC<AutocompleteProps> = ({
   optionsList = [],
   loading,
   search = '',
+  label = '',
   setSearch,
-  currentBoard,
-  setCurrentBoard,
+  setValue,
 }) => {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] =
-    useState<{ title: string; id: string }[]>(optionsList);
+  const [options, setOptions] = useState<any[]>(optionsList);
 
   useEffect(() => {
     setOptions(optionsList);
@@ -33,7 +32,7 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
 
   return (
     <div className={styles.root}>
-      <Autocomplete
+      <MuiAutocomplite
         open={open}
         onOpen={() => {
           setOpen(true);
@@ -42,7 +41,7 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
           setOpen(false);
         }}
         onChange={(_: any, newValue: any) => {
-          setCurrentBoard(newValue);
+          setValue(newValue);
         }}
         inputValue={search}
         onInputChange={(_, newInputValue) => {
@@ -55,7 +54,7 @@ export const BoardAutocomplete: FC<BoardAutocompleteProps> = ({
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Enter a board ID here..."
+            label={label}
             InputProps={{
               ...params.InputProps,
               endAdornment: (

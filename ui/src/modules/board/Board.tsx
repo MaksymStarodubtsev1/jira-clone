@@ -1,11 +1,12 @@
-import { BoardColumn } from './components/column/BoardColumn';
-import Alert from '@mui/material/Alert';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import styles from './Board.module.scss';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { getBoard } from '../../apis/Board';
-import { FC } from 'react';
+
+import styles from './Board.module.scss';
+import { BoardView } from './components/board-view';
+import { CreateBoardModal } from './components/create-board-modal';
+import { Autocomplete } from '../../shared/components/autocomplete';
+import { getBoards } from '../../apis/Board';
+import { useDebounce } from '../../utils';
 
 export interface Ticket {
   id: string;
@@ -13,48 +14,34 @@ export interface Ticket {
   description: string;
 }
 
-interface BoardProps {
-  boardId: string;
-}
+export const Home = () => {
+  const [currentBoard, setCurrentBoard] = useState({ id: null });
+  const [search, setSearch] = useState<string>();
 
-export const Board: FC<BoardProps> = ({ boardId }) => {
-  const boardQuery = useQuery(['board', boardId], () => getBoard(boardId), {
-    enabled: !!boardId,
-  });
+  const searchValue = useDebounce(search?.trim());
 
-  const isLoading = boardQuery.isLoading;
-  const isError = boardQuery.isError;
+  const boardsQuery = useQuery(
+    ['boards', searchValue],
+    () => getBoards(searchValue),
+    {
+      enabled: !!searchValue,
+    }
+  );
 
-  if (isError) {
-    return <Alert severity="error">This is an error Alert.</Alert>;
-  }
-
-  if (isLoading) {
-    return (
-      <Backdrop
-        sx={{
-          color: '#fff',
-          opacity: 0.4,
-          zIndex: (theme: any) => theme.zIndex.drawer + 1,
-        }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
-  }
-
-  const columnsList = boardQuery.data?.data.columns || [];
+  const options = boardsQuery.data?.data || [];
 
   return (
     <div className={styles.root}>
-      {columnsList.map((column, index) => (
-        <BoardColumn
-          key={column.id}
-          column={column}
-          canAddTicket={index === 0}
-        />
-      ))}
+      <Autocomplete
+        optionsList={options}
+        loading={boardsQuery.isLoading}
+        search={search}
+        label="Enter a board ID here..."
+        setSearch={setSearch}
+        setValue={setCurrentBoard}
+      />
+      <CreateBoardModal />
+      <BoardView boardId={currentBoard?.id || ''} />
     </div>
   );
 };

@@ -1,12 +1,6 @@
 import { useState } from 'react';
+import { useMutation } from 'react-query';
 
-import styles from './Home.module.scss';
-import { Board } from '../../modules/board/Board';
-import { BoardAutocomplete } from '../../shared/components/autocomplete';
-import { useMutation, useQuery } from 'react-query';
-
-import { createBoard, getBoards } from '../../apis/Board';
-import { useDebounce } from '../../utils';
 import {
   Button,
   DialogTitle,
@@ -17,29 +11,11 @@ import {
 } from '@mui/material';
 import type { PaperProps } from '@mui/material';
 
-import { queryClient } from '../../core/http-client';
+import { queryClient } from '../../../../core/http-client';
+import { createBoard } from '../../../../apis/Board';
 
-export interface Ticket {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export const Home = () => {
-  const [currentBoard, setCurrentBoard] = useState(null);
-  const [search, setSearch] = useState<string>();
-
+export const CreateBoardModal = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-  const searchValue = useDebounce(search?.trim());
-
-  const boardsQuery = useQuery(
-    ['boards', searchValue],
-    () => getBoards(searchValue),
-    {
-      enabled: !!searchValue,
-    }
-  );
 
   const createNewBoardMutation = useMutation(createBoard, {
     onSuccess: () => {
@@ -69,17 +45,8 @@ export const Home = () => {
     },
   };
 
-  const options = boardsQuery.data?.data || [];
   return (
-    <div className={styles.root}>
-      <BoardAutocomplete
-        optionsList={options}
-        loading={boardsQuery.isLoading}
-        search={search}
-        setSearch={setSearch}
-        currentBoard={currentBoard}
-        setCurrentBoard={setCurrentBoard}
-      />
+    <>
       <Button onClick={() => setIsCreateModalOpen(true)}>
         Create new board
       </Button>
@@ -107,7 +74,6 @@ export const Home = () => {
           <Button type="submit">Create</Button>
         </DialogActions>
       </Dialog>
-      <Board boardId={currentBoard?.id ?? ''} />
-    </div>
+    </>
   );
 };

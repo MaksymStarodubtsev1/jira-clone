@@ -15,7 +15,7 @@ import {
   editCardById,
   moveCardToColumnById,
 } from '../../../../apis/Card';
-import { Ticket } from '../../../../pages/Home/Home';
+import { Ticket } from '../../Board';
 import { queryClient } from '../../../../core/http-client';
 
 export const ItemTypes = {
