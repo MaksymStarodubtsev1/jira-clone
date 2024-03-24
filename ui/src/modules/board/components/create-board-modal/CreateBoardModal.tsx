@@ -1,25 +1,23 @@
-import { useState } from 'react';
+import { FC, SetStateAction, useState } from 'react';
 import { useMutation } from 'react-query';
 
-import {
-  Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Dialog,
-  TextField,
-} from '@mui/material';
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
 import type { PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
 import { createBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
 
-export const CreateBoardModal = () => {
+interface CreateBoardModalProps {
+  setCurrentBoard: SetStateAction<any>;
+}
+
+export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const createNewBoardMutation = useMutation(createBoard, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setCurrentBoard(data.data);
       queryClient.invalidateQueries('board');
     },
     onSettled: () => {
@@ -39,9 +37,7 @@ export const CreateBoardModal = () => {
     component: 'form',
     onSubmit: (event) => {
       event.preventDefault();
-      const formData = new FormData(
-        event.currentTarget as unknown as HTMLFormElement
-      );
+      const formData = new FormData(event.currentTarget as unknown as HTMLFormElement);
       const formJson = Object.fromEntries(formData.entries());
       const title = formJson.title as string;
 
@@ -51,11 +47,7 @@ export const CreateBoardModal = () => {
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="success"
-        onClick={() => setIsCreateModalOpen(true)}
-      >
+      <Button variant="contained" color="success" onClick={() => setIsCreateModalOpen(true)}>
         Create new board
       </Button>
       <Dialog
@@ -91,9 +83,7 @@ export const CreateBoardModal = () => {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setIsCreateModalOpen(false)}>
-                Cancel
-              </Button>
+              <Button onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
               <Button type="submit">Create</Button>
             </DialogActions>
           </>

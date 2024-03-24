@@ -25,13 +25,9 @@ export const Home = () => {
 
   const searchValue = useDebounce(search?.trim());
 
-  const boardsQuery = useQuery(
-    ['boards', searchValue],
-    () => getBoards(searchValue),
-    {
-      enabled: !!searchValue,
-    }
-  );
+  const boardsQuery = useQuery(['boards', searchValue], () => getBoards(searchValue), {
+    enabled: !!searchValue,
+  });
 
   const options = boardsQuery.data?.data || [];
 
@@ -46,16 +42,9 @@ export const Home = () => {
         setValue={setCurrentBoard}
       />
       <div className={styles.boardActions}>
-        <CreateBoardModal />
-        <UpdateBoardModal
-          board={currentBoard}
-          loading={boardsQuery.isLoading}
-        />
-        <DeleteBoardModal
-          board={currentBoard}
-          loading={boardsQuery.isLoading}
-          setCurrentBoard={setCurrentBoard}
-        />
+        <CreateBoardModal setCurrentBoard={setCurrentBoard} />
+        <UpdateBoardModal board={currentBoard} loading={boardsQuery.isLoading} />
+        <DeleteBoardModal board={currentBoard} loading={boardsQuery.isLoading} setCurrentBoard={setCurrentBoard} />
       </div>
       <BoardView boardId={currentBoard?.id} />
     </div>
