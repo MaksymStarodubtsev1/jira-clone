@@ -53,7 +53,7 @@ export const Board: FC<BoardProps> = ({ boardId }) => {
           key={column.id}
           column={column}
           canAddTicket={index === 0}
-        ></BoardColumn>
+        />
       ))}
     </div>
   );

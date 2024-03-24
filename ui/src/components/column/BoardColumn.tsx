@@ -1,12 +1,14 @@
 import { FC, useState } from 'react';
 import { useDrop } from 'react-dnd';
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import {
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Dialog,
+  TextField,
+} from '@mui/material';
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../card/BoardCard';
@@ -14,6 +16,7 @@ import { Ticket } from '../../pages/Home';
 import { queryClient } from '../../../core/http-client';
 import { useMutation } from 'react-query';
 import { createCardInColumn } from '../../../apis/Card';
+import type { PaperProps } from '@mui/material';
 
 export const ItemTypes = {
   BOX: 'box',
@@ -72,14 +75,16 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket }) => {
     backgroundColor = 'darkkhaki';
   }
 
-  const createCardModalProps = {
+  const paperProps: PaperProps = {
     component: 'form',
-    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+    onSubmit: (event) => {
       event.preventDefault();
-      const formData = new FormData(event.currentTarget);
-      const formJson = Object.fromEntries((formData as any).entries());
-      const title = formJson.title;
-      const description = formJson.description;
+      const formData = new FormData(
+        event.currentTarget as unknown as HTMLFormElement
+      );
+      const formJson = Object.fromEntries(formData.entries());
+      const title = formJson.title as string;
+      const description = formJson.description as string;
 
       handleCreateCard({
         title,
@@ -112,7 +117,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket }) => {
       <Dialog
         open={isCreateModalOpen}
         onClose={() => handleChangeCreateModalVisibility(false)}
-        PaperProps={createCardModalProps}
+        PaperProps={paperProps}
       >
         <DialogTitle>Create new ticket</DialogTitle>
         <DialogContent>
