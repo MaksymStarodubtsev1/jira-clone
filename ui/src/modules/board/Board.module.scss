@@ -6,8 +6,18 @@
   padding: 32px;
 }
 
-.boardActions {
+.actions {
   display: flex;
   justify-content: center;
   gap: 12px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.heading {
 }

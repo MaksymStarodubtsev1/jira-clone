@@ -9,6 +9,7 @@ import { DeleteBoardModal } from './components/delete-board-modal';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { getBoards } from '../../apis/Board';
 import { useDebounce } from '../../utils';
+import { Typography, Grid } from '@mui/material';
 
 export interface Ticket {
   id: string;
@@ -41,10 +42,17 @@ export const Home = () => {
         setSearch={setSearch}
         setValue={setCurrentBoard}
       />
-      <div className={styles.boardActions}>
-        <CreateBoardModal setCurrentBoard={setCurrentBoard} />
-        <UpdateBoardModal board={currentBoard} loading={boardsQuery.isLoading} />
-        <DeleteBoardModal board={currentBoard} loading={boardsQuery.isLoading} setCurrentBoard={setCurrentBoard} />
+      <div className={styles.info}>
+        {currentBoard && (
+          <Typography variant="h4" display="block">
+            {currentBoard.title}
+          </Typography>
+        )}
+        <div className={styles.actions}>
+          <CreateBoardModal setCurrentBoard={setCurrentBoard} />
+          <UpdateBoardModal board={currentBoard} loading={boardsQuery.isLoading} />
+          <DeleteBoardModal board={currentBoard} loading={boardsQuery.isLoading} setCurrentBoard={setCurrentBoard} />
+        </div>
       </div>
       <BoardView boardId={currentBoard?.id} />
     </div>
