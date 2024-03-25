@@ -1,8 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, SetStateAction, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
-import type { PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
 import { updateBoard } from '../../../../apis/Board';
@@ -14,14 +13,23 @@ interface UpdateBoardModalProps {
     title: string;
   };
   loading: boolean;
+  setCurrentBoard: SetStateAction<any>;
 }
 
-export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) => {
+export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, setCurrentBoard }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [title, setTitle] = useState(board?.title);
+
+  useEffect(() => {
+    if (board?.title) {
+      setTitle(board?.title);
+    }
+  }, [board?.title]);
 
   const updateNewBoardMutation = useMutation(updateBoard, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(['board', board?.id]);
+      setCurrentBoard(data.data);
     },
     onSettled: () => {
       setIsUpdateModalOpen(false);
@@ -38,25 +46,9 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) 
     });
   };
 
-  const updateBoardModalProps: PaperProps = {
-    component: 'form',
-    onSubmit: (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.currentTarget as unknown as HTMLFormElement);
-      const formJson = Object.fromEntries(formData.entries());
-      const title = formJson.title as string;
-
-      handleUpdateBoard({ id: board?.id, title });
-    },
-  };
-
   return (
     <>
-      <Button
-        variant="outlined"
-        disabled={disabledFields}
-        onClick={() => setIsUpdateModalOpen(true)}
-      >
+      <Button variant="outlined" disabled={disabledFields} onClick={() => setIsUpdateModalOpen(true)}>
         {isBoardEmpty ? 'Update' : `Update board`}
       </Button>
       <Dialog
@@ -69,7 +61,6 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) 
           }
           setIsUpdateModalOpen(false);
         }}
-        PaperProps={updateBoardModalProps}
       >
         {updateNewBoardMutation.isLoading ? (
           <Loading />
@@ -80,18 +71,19 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) 
               <TextField
                 autoFocus
                 required
-                margin="dense"
-                id="title"
-                name="title"
                 label="title"
                 type="text"
                 fullWidth
                 variant="standard"
+                value={title}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setTitle(event.target.value);
+                }}
               />
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
-              <Button type="submit">Update</Button>
+              <Button onClick={() => handleUpdateBoard({ ...board, title })}>Update</Button>
             </DialogActions>
           </>
         )}
