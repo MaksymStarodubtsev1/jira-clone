@@ -6,7 +6,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import styles from './BoardView.module.scss';
-import { BoardColumn } from '../column/BoardColumn';
+import { BoardColumn } from '../board-column/BoardColumn';
 import { getBoard } from '../../../../apis/Board';
 import type { Board } from '../../../../shared/types';
 
@@ -23,7 +23,7 @@ export const BoardView: FC<BoardProps> = ({ boardId }) => {
   const isError = boardQuery.isError;
 
   if (isError) {
-    return <Alert severity="error">This is an error Alert.</Alert>;
+    return <Alert severity="error">Error appeared</Alert>;
   }
 
   if (isLoading) {

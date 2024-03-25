@@ -5,12 +5,11 @@ import { useDrop } from 'react-dnd';
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
 
 import styles from './BoardColumn.module.scss';
-import { BoardCard } from '../card/BoardCard';
+import { BoardCard } from '../board-card/BoardCard';
 import { queryClient } from '../../../../core/http-client';
 import { createCardInColumn } from '../../../../apis/Card';
 import type { Column } from '../../../../shared/types';
 import { ItemTypes } from '../../../../shared/constans';
-
 
 interface BoardColumnProps {
   column: Column;

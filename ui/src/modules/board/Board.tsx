@@ -7,7 +7,7 @@ import styles from './Board.module.scss';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { getBoards } from '../../apis/Board';
 import { useDebounce } from '../../utils';
-import { Ticket } from '../../shared/types';
+import type { Ticket } from '../../shared/types';
 
 export const Board = () => {
   const [currentBoard, setCurrentBoard] = useState<Ticket>();

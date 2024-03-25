@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogActions, Dialog, PaperProps } from '@mui/material';
@@ -6,6 +6,7 @@ import { Button, DialogTitle, DialogActions, Dialog, PaperProps } from '@mui/mat
 import { queryClient } from '../../../../core/http-client';
 import { deleteBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
+import type { Board, Ticket } from '../../../../shared/types';
 
 interface DeleteBoardModalProps {
   board?: {
@@ -13,7 +14,7 @@ interface DeleteBoardModalProps {
     title: string;
   };
   loading: boolean;
-  setCurrentBoard: SetStateAction<any>;
+  setCurrentBoard: (value: Ticket | null) => void;
 }
 
 export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, setCurrentBoard }) => {
@@ -32,7 +33,7 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, se
   const isBoardEmpty = !board;
   const disabledFields: boolean = isBoardEmpty || loading || deleteBoardMutation.isLoading;
 
-  const handleDeleteBoard = (board: any) => {
+  const handleDeleteBoard = (board: Board) => {
     deleteBoardMutation.mutate(board.id);
   };
 
@@ -67,10 +68,8 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, se
         maxWidth={'xs'}
         open={isDeleteModalOpen}
         onClose={() => {
-          if (disabledFields) {
-            return;
-          }
-          setIsDeleteModalOpen(false);
+          if (disabledFields) return;
+          else setIsDeleteModalOpen(false);
         }}
         PaperProps={deleteCardModalProps}
       >

@@ -28,7 +28,7 @@ export interface BoardCardProps {
 
 export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   const [isEditable, setIsEditable] = useState(false);
-  const [updatedBoard, setUpdatedBoard] = useState(item);
+  const [updatedCard, setUpdatedCard] = useState(item);
 
   const handleCloseEditModal = () => setIsEditable(false);
 
@@ -73,11 +73,8 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   const cursor = isEditable ? 'text' : 'move';
   const disabledFields = editCardMutation.isLoading;
 
-  const handleUpdateCard = ({ id, boardDetails }: any) => {
-    editCardMutation.mutate({
-      id: id,
-      details: boardDetails,
-    });
+  const handleUpdateCard = (updatedCardDetails: Ticket) => {
+    editCardMutation.mutate(updatedCardDetails);
   };
 
   const handleRemoveCard = () => {
@@ -97,36 +94,26 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
           type="text"
           fullWidth
           variant="standard"
-          value={updatedBoard.title}
+          value={updatedCard.title}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setUpdatedBoard((_board) => ({ ..._board, title: event.target.value }));
+            setUpdatedCard((_card) => ({ ..._card, title: event.target.value }));
           }}
         />
         <TextField
           required
-          margin="dense"
           label="description"
           type="text"
           fullWidth
           variant="standard"
-          value={updatedBoard.description}
+          value={updatedCard.description}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setUpdatedBoard((_board) => ({ ..._board, description: event.target.value }));
+            setUpdatedCard((_card) => ({ ..._card, description: event.target.value }));
           }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseEditModal}>Cancel</Button>
-        <Button
-          onClick={() =>
-            handleUpdateCard({
-              id: item.id,
-              boardDetails: updatedBoard,
-            })
-          }
-        >
-          Save
-        </Button>
+        <Button onClick={() => handleUpdateCard(updatedCard)}>Save</Button>
       </DialogActions>
     </>
   );

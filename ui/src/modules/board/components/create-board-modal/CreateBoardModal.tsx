@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
@@ -6,9 +6,10 @@ import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, P
 import { queryClient } from '../../../../core/http-client';
 import { createBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
+import type { Ticket } from '../../../../shared/types';
 
 interface CreateBoardModalProps {
-  setCurrentBoard: SetStateAction<any>;
+  setCurrentBoard: (value: Ticket) => void;
 }
 
 export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard }) => {
@@ -69,11 +70,8 @@ export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard })
         maxWidth={'xs'}
         open={isCreateModalOpen}
         onClose={() => {
-          if (disabledFields) {
-            return;
-          }
-
-          setIsCreateModalOpen(false);
+          if (disabledFields) return;
+          else setIsCreateModalOpen(false);
         }}
         PaperProps={createCardModalProps}
       >

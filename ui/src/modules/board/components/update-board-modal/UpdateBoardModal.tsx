@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useEffect, useState } from 'react';
+import { F, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
@@ -6,14 +6,12 @@ import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } 
 import { queryClient } from '../../../../core/http-client';
 import { updateBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
+import type { Board, Ticket } from '../../../../shared/types';
 
 interface UpdateBoardModalProps {
-  board?: {
-    id: string;
-    title: string;
-  };
+  board?: Board;
   loading: boolean;
-  setCurrentBoard: SetStateAction<any>;
+  setCurrentBoard: (value: Ticket) => void;
 }
 
 export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, setCurrentBoard }) => {
@@ -39,7 +37,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, se
   const isBoardEmpty = !board;
   const disabledFields: boolean = isBoardEmpty || loading || updateNewBoardMutation.isLoading;
 
-  const handleUpdateBoard = (board: any) => {
+  const handleUpdateBoard = (board: Board) => {
     updateNewBoardMutation.mutate({
       id: board.id,
       title: board.title,
@@ -82,10 +80,8 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, se
         maxWidth={'xs'}
         open={isUpdateModalOpen}
         onClose={() => {
-          if (disabledFields) {
-            return;
-          }
-          setIsUpdateModalOpen(false);
+          if (disabledFields) return;
+          else setIsUpdateModalOpen(false);
         }}
       >
         {dialogContent}
