@@ -6,10 +6,10 @@ import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, P
 import { queryClient } from '../../../../core/http-client';
 import { createBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
-import type { Ticket } from '../../../../shared/types';
+import type { Board } from '../../../../shared/types';
 
 interface CreateBoardModalProps {
-  setCurrentBoard: (value: Ticket) => void;
+  setCurrentBoard: (value: Board) => void;
 }
 
 export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard }) => {

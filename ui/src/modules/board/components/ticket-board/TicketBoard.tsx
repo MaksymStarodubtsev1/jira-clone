@@ -5,16 +5,16 @@ import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import styles from './BoardView.module.scss';
+import styles from './TicketBoard.module.scss';
 import { BoardColumn } from '../board-column/BoardColumn';
 import { getBoard } from '../../../../apis/Board';
 import type { Board } from '../../../../shared/types';
 
-interface BoardProps {
+interface TicketBoardProps {
   boardId?: string;
 }
 
-export const BoardView: FC<BoardProps> = ({ boardId }) => {
+export const TicketBoard: FC<TicketBoardProps> = ({ boardId }) => {
   const boardQuery = useQuery(['board', boardId], () => getBoard(boardId), {
     enabled: !!boardId,
   });

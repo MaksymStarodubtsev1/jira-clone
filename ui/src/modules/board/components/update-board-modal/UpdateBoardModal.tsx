@@ -1,4 +1,4 @@
-import { F, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
@@ -6,17 +6,17 @@ import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } 
 import { queryClient } from '../../../../core/http-client';
 import { updateBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
-import type { Board, Ticket } from '../../../../shared/types';
+import type { Board } from '../../../../shared/types';
 
 interface UpdateBoardModalProps {
   board?: Board;
   loading: boolean;
-  setCurrentBoard: (value: Ticket) => void;
+  setCurrentBoard: (value: Board | undefined) => void;
 }
 
 export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, setCurrentBoard }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [title, setTitle] = useState(board?.title);
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     if (board?.title) {
@@ -58,14 +58,20 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, se
           fullWidth
           variant="standard"
           value={title}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
             setTitle(event.target.value);
           }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
-        <Button onClick={() => handleUpdateBoard({ ...board, title })}>Update</Button>
+        <Button
+          onClick={() => {
+            if (!isBoardEmpty) handleUpdateBoard({ ...board, title });
+          }}
+        >
+          Update
+        </Button>
       </DialogActions>
     </>
   );

@@ -6,15 +6,12 @@ import { Button, DialogTitle, DialogActions, Dialog, PaperProps } from '@mui/mat
 import { queryClient } from '../../../../core/http-client';
 import { deleteBoard } from '../../../../apis/Board';
 import { Loading } from '../../../../shared/components/loading';
-import type { Board, Ticket } from '../../../../shared/types';
+import type { Board } from '../../../../shared/types';
 
 interface DeleteBoardModalProps {
-  board?: {
-    id: string;
-    title: string;
-  };
+  board?: Board;
   loading: boolean;
-  setCurrentBoard: (value: Ticket | null) => void;
+  setCurrentBoard: (value: Board | undefined) => void;
 }
 
 export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, setCurrentBoard }) => {
@@ -23,7 +20,7 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, se
   const deleteBoardMutation = useMutation(deleteBoard, {
     onSuccess: () => {
       queryClient.invalidateQueries(['board', board?.id]);
-      setCurrentBoard(null);
+      setCurrentBoard(undefined);
     },
     onSettled: () => {
       setIsDeleteModalOpen(false);

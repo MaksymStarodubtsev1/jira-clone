@@ -49,7 +49,7 @@ export const Autocomplete: FC<AutocompleteProps> = ({
         onInputChange={(_, newInputValue) => {
           setSearch(newInputValue);
         }}
-        isOptionEqualToValue={(option, value) => option.title === value.title}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
         getOptionLabel={(option) => option.title}
         options={options}
         loading={loading}

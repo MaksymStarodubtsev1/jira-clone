@@ -6,15 +6,15 @@ import styles from './BoardInfo.module.scss';
 import { CreateBoardModal } from '../create-board-modal';
 import { UpdateBoardModal } from '../update-board-modal';
 import { DeleteBoardModal } from '../delete-board-modal';
-import { Ticket } from '../../../../shared/types';
+import { Board } from '../../../../shared/types';
 
 interface BoardInfoProps {
-  currentBoard?: Ticket;
-  setCurrentBoard: (value: Ticket) => void;
+  currentBoard?: Board;
+  setCurrentBoard: (value: Board | undefined) => void;
   loading: boolean;
 }
 
-export const BoardInfo: FC<BoardInfoProps> = ({ currentBoard, setCurrentBoard, loading }) => {
+export const BoardInfo: FC<BoardInfoProps> = ({ currentBoard, loading, setCurrentBoard }) => {
   return (
     <div className={styles.root}>
       {currentBoard && (

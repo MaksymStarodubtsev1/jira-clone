@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
-import { BoardView } from './components/board-view';
+import { TicketBoard } from './components/ticket-board';
 import { BoardInfo } from './components/board-info/BoardInfo';
 import styles from './Board.module.scss';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { getBoards } from '../../apis/Board';
 import { useDebounce } from '../../utils';
-import type { Ticket } from '../../shared/types';
+import { Board } from '../../shared/types';
 
-export const Board = () => {
-  const [currentBoard, setCurrentBoard] = useState<Ticket>();
-  const [search, setSearch] = useState<string>();
+export const BoardView = () => {
+  const [currentBoard, setCurrentBoard] = useState<Board>();
+  const [search, setSearch] = useState<string>('');
 
   const searchValue = useDebounce(search?.trim());
 
@@ -32,7 +32,7 @@ export const Board = () => {
         setValue={setCurrentBoard}
       />
       <BoardInfo currentBoard={currentBoard} setCurrentBoard={setCurrentBoard} loading={boardsQuery.isLoading} />
-      <BoardView boardId={currentBoard?.id} />
+      <TicketBoard boardId={currentBoard?.id} />
     </div>
   );
 };
