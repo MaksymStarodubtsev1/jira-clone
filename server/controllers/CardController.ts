@@ -4,12 +4,6 @@ import prisma from '../prisma/client';
 
 export const create = async (req: Request, res: Response) => {
   try {
-    if (!req.body.title || !req.body.description || !req.body.columnId) {
-      return res.status(400).json({
-        message: 'Missing required field: title, description, columnId',
-      });
-    }
-
     const newCard = await prisma.card.create({
       data: {
         title: req.body.title,
@@ -27,12 +21,6 @@ export const create = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id) {
-      res.status(400).json({
-        message: 'Missing required field: cardId',
-      });
-    }
-
     const updatedCard = await prisma.card.update({
       where: {
         id: req.params.id,
@@ -55,10 +43,6 @@ export const update = async (req: Request, res: Response) => {
 
 export const remove = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id) {
-      return res.status(400).json({ message: 'Missing required field: id' });
-    }
-
     await prisma.card.delete({
       where: {
         id: req.params.id,

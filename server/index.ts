@@ -4,6 +4,17 @@ import dotenv from 'dotenv';
 
 import { CardController, BoardController } from './controllers';
 import { uniqueBoardMiddleware } from './utils';
+import {
+  createBoardValidation,
+  removeBoardValidation,
+  updateBoardValidation,
+} from './validation/schemas/board';
+import handleValidationError from './validation/utils/handleValidationError';
+import {
+  createCardValidation,
+  removeCardValidation,
+  updateCardValidation,
+} from './validation/schemas/card';
 
 dotenv.config();
 
@@ -18,15 +29,47 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
 
-app.post('/board', uniqueBoardMiddleware, BoardController.create);
+app.post(
+  '/board',
+  createBoardValidation,
+  handleValidationError,
+  uniqueBoardMiddleware,
+  BoardController.create
+);
 app.get('/board', BoardController.getOne);
 app.get('/boards', BoardController.getMany);
-app.patch('/board/:id', uniqueBoardMiddleware, BoardController.update);
-app.delete('/board/:id', BoardController.remove);
+app.patch(
+  '/board/:id',
+  updateBoardValidation,
+  handleValidationError,
+  uniqueBoardMiddleware,
+  BoardController.update
+);
+app.delete(
+  '/board/:id',
+  removeBoardValidation,
+  handleValidationError,
+  BoardController.remove
+);
 
-app.post('/card', CardController.create);
-app.patch('/card/:id', CardController.update);
-app.delete('/card/:id', CardController.remove);
+app.post(
+  '/card',
+  createCardValidation,
+  handleValidationError,
+  CardController.create
+);
+app.patch(
+  '/card/:id',
+  updateCardValidation,
+  handleValidationError,
+  CardController.update
+);
+app.delete(
+  '/card/:id',
+  removeCardValidation,
+  handleValidationError,
+  CardController.remove
+);
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://localhost:${port}`);

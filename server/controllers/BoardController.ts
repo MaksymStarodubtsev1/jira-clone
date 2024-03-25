@@ -4,10 +4,6 @@ import prisma from '../prisma/client';
 
 export const create = async (req: Request, res: Response) => {
   try {
-    if (!req.body.title) {
-      return res.status(400).json({ message: 'Missing required field: title' });
-    }
-
     const newBoard = await prisma.board.create({
       data: {
         title: req.body.title,
@@ -31,10 +27,6 @@ export const create = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id || !req.body.title) {
-      return res.status(400).json({ message: 'Missing required field: title' });
-    }
-
     const updatedBoard = await prisma.board.update({
       where: {
         id: req.params.id,
@@ -53,10 +45,6 @@ export const update = async (req: Request, res: Response) => {
 
 export const remove = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id) {
-      return res.status(400).json({ message: 'Missing required field: id' });
-    }
-
     const deleteCards = prisma.card.deleteMany({
       where: { column: { boardId: { in: [req.params.id] } } },
     });
@@ -85,7 +73,7 @@ export const remove = async (req: Request, res: Response) => {
 export const getOne = async (req: Request, res: Response) => {
   try {
     if (!req.query.id) {
-      return res.status(400).json({ message: 'Missing required field: id' });
+      return res.status(422).json({ message: 'Missing required field: id' });
     }
 
     const board = await prisma.board.findUnique({
