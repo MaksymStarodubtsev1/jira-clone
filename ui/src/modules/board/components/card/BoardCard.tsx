@@ -1,18 +1,26 @@
-import { FC, useState, useMemo, Fragment } from 'react';
+import { FC, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { useMutation } from 'react-query';
-import EasyEdit, { Types } from 'react-easy-edit';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  PaperProps,
+  TextField,
+  Typography,
+} from '@mui/material';
 import Button from '@mui/material/Button';
 
 import styles from './BoardCard.module.scss';
 import { deleteCardById, editCardById, moveCardToColumnById } from '../../../../apis/Card';
 import { Ticket } from '../../Board';
 import { queryClient } from '../../../../core/http-client';
+import { Loading } from '../../../../shared/components/loading';
 
 export const ItemTypes = {
   BOX: 'box',
@@ -24,8 +32,9 @@ export interface BoardCardProps {
 
 export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   const [isEditable, setIsEditable] = useState(false);
-  const [title, setTitle] = useState<string>(item.title);
-  const [description, setDescription] = useState<string>(item.description);
+
+  const handleEdit = () => setIsEditable(true);
+  const handleCancelEdit = () => setIsEditable(false);
 
   const moveCardToColumnMutation = useMutation(moveCardToColumnById, {
     onSuccess: () => {
@@ -37,6 +46,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
     onSuccess: () => {
       queryClient.invalidateQueries('board');
     },
+    onSettled: handleCancelEdit,
   });
 
   const deleteCardMutation = useMutation(deleteCardById, {
@@ -44,28 +54,6 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
       queryClient.invalidateQueries('board');
     },
   });
-
-  const handleEdit = () => setIsEditable(true);
-  const handleCancelEdit = () => setIsEditable(false);
-
-  const handleUpdateCard = () => {
-    editCardMutation.mutate(
-      {
-        id: item.id,
-        details: {
-          title,
-          description,
-        },
-      },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries('board');
-        },
-      }
-    );
-
-    handleCancelEdit();
-  };
 
   const handleRemoveCard = () => {
     deleteCardMutation.mutate(item.id);
@@ -89,57 +77,89 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
     }),
   }));
 
-  const opacity = isDragging ? 0.4 : 1;
+  const editCardModalProps: PaperProps = {
+    component: 'form',
+    onSubmit: (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget as unknown as HTMLFormElement);
+      const formJson = Object.fromEntries(formData.entries());
+      const title = formJson.title as string;
+      const description = formJson.description as string;
 
-  const buttonContent = useMemo(() => {
-    if (isEditable) {
-      return (
-        <CardActions>
-            <Button size="small" onClick={handleUpdateCard}>
-              Save
-            </Button>
-            <Button size="small" onClick={handleCancelEdit}>
-              Cancel
-            </Button>
-        </CardActions>
-      );
-    } else {
-      return (
-        <CardActions>
-            <Button size="small" onClick={handleEdit}>
-              Edit
-            </Button>
-            <Button size="small" onClick={handleRemoveCard}>
-              Delete
-            </Button>
-        </CardActions>
-      );
-    }
-  }, [isEditable, title, description]);
+      editCardMutation.mutate({
+        id: item.id,
+        details: {
+          title,
+          description,
+        },
+      });
+    },
+  };
+
+  const opacity = isDragging ? 0.4 : 1;
+  const cursor = isEditable ? 'text' : 'move';
+  const disabledFields = editCardMutation.isLoading;
 
   return (
-    <Card classes={{ root: styles.root }} ref={drag} style={{ opacity }}>
+    <Card classes={{ root: styles.root }} ref={drag} style={{ opacity, cursor }}>
       <CardContent>
-        <EasyEdit
-          allowEdit={isEditable}
-          type={Types.TEXT}
-          onSave={setTitle}
-          value={title}
-          cssClassPrefix={styles.easyEditInput}
-          saveButtonLabel="Save"
-          cancelButtonLabel="Cancel"
-        />
-        <EasyEdit
-          allowEdit={isEditable}
-          type={Types.TEXT}
-          onSave={setDescription}
-          value={description}
-          cssClassPrefix={styles.easyEditInput}
-          saveButtonLabel="Save"
-          cancelButtonLabel="Cancel"
-        />
+        <Typography variant="h5">{item.title}</Typography>
+        <Typography variant="body2">{item.description}</Typography>
       </CardContent>
-      {buttonContent}
+      <CardActions>
+        <Button size="small" onClick={handleEdit}>
+          Edit
+        </Button>
+        <Button size="small" onClick={handleRemoveCard}>
+          Delete
+        </Button>
+      </CardActions>
+      {disabledFields ? (
+        <Loading />
+      ) : (
+        <Dialog
+          fullWidth
+          maxWidth={'xs'}
+          open={isEditable}
+          onClose={() => {
+            if (disabledFields) {
+              return;
+            }
+
+            handleCancelEdit();
+          }}
+          PaperProps={editCardModalProps}
+        >
+          <DialogTitle>Update card info</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="title"
+              name="title"
+              label="title"
+              type="text"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              required
+              margin="dense"
+              id="description"
+              name="description"
+              label="description"
+              type="text"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelEdit}>Cancel</Button>
+            <Button type="submit">Save</Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Card>
   );
 };

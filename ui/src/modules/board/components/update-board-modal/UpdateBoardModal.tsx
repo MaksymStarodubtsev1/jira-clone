@@ -1,7 +1,7 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useState } from 'react';
 import { useMutation } from 'react-query';
 
-import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, Typography } from '@mui/material';
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
 import type { PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
@@ -38,7 +38,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) 
     });
   };
 
-  const updateCardModalProps: PaperProps = {
+  const updateBoardModalProps: PaperProps = {
     component: 'form',
     onSubmit: (event) => {
       event.preventDefault();
@@ -69,7 +69,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading }) 
           }
           setIsUpdateModalOpen(false);
         }}
-        PaperProps={updateCardModalProps}
+        PaperProps={updateBoardModalProps}
       >
         {updateNewBoardMutation.isLoading ? (
           <Loading />

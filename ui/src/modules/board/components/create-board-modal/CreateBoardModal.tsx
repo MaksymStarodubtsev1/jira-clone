@@ -63,7 +63,6 @@ export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard })
         }}
         PaperProps={createCardModalProps}
       >
-        {' '}
         {disabledFields ? (
           <Loading />
         ) : (
