@@ -5,15 +5,7 @@ import { useMutation } from 'react-query';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  PaperProps,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, PaperProps, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 
 import styles from './BoardCard.module.scss';
@@ -32,6 +24,7 @@ export interface BoardCardProps {
 
 export const BoardCard: FC<BoardCardProps> = ({ item }) => {
   const [isEditable, setIsEditable] = useState(false);
+  const [updatedBoard, setUpdatedBoard] = useState(item);
 
   const handleEdit = () => setIsEditable(true);
   const handleCancelEdit = () => setIsEditable(false);
@@ -77,28 +70,16 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
     }),
   }));
 
-  const editCardModalProps: PaperProps = {
-    component: 'form',
-    onSubmit: (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.currentTarget as unknown as HTMLFormElement);
-      const formJson = Object.fromEntries(formData.entries());
-      const title = formJson.title as string;
-      const description = formJson.description as string;
-
-      editCardMutation.mutate({
-        id: item.id,
-        details: {
-          title,
-          description,
-        },
-      });
-    },
-  };
-
   const opacity = isDragging ? 0.4 : 1;
   const cursor = isEditable ? 'text' : 'move';
   const disabledFields = editCardMutation.isLoading;
+
+  const handleUpdateCard = ({ id, boardDetails }) => {
+    editCardMutation.mutate({
+      id: item.id,
+      details: updatedBoard,
+    });
+  };
 
   return (
     <Card classes={{ root: styles.root }} ref={drag} style={{ opacity, cursor }}>
@@ -128,35 +109,46 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
 
             handleCancelEdit();
           }}
-          PaperProps={editCardModalProps}
         >
           <DialogTitle>Update card info</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
               required
-              margin="dense"
-              id="title"
-              name="title"
               label="title"
               type="text"
               fullWidth
               variant="standard"
+              value={updatedBoard.title}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setUpdatedBoard((_board) => ({ ..._board, title: event.target.value }));
+              }}
             />
             <TextField
               required
               margin="dense"
-              id="description"
-              name="description"
               label="description"
               type="text"
               fullWidth
               variant="standard"
+              value={updatedBoard.description}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setUpdatedBoard((_board) => ({ ..._board, description: event.target.value }));
+              }}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCancelEdit}>Cancel</Button>
-            <Button type="submit">Save</Button>
+            <Button
+              onClick={() =>
+                handleUpdateCard({
+                  id: item.id,
+                  boardDetails: updatedBoard,
+                })
+              }
+            >
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
       )}
