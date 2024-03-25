@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import styles from './Autocomplete.module.scss';
-import { Autocomplete as MuiAutocomplite } from '@mui/material';
+import { Autocomplete as MuiAutocomplete } from '@mui/material';
 
 import TextField from '@mui/material/TextField';
 
@@ -32,7 +32,7 @@ export const Autocomplete: FC<AutocompleteProps> = ({
 
   return (
     <div className={styles.root}>
-      <MuiAutocomplite
+      <MuiAutocomplete
         open={open}
         onOpen={() => {
           setOpen(true);
@@ -41,7 +41,9 @@ export const Autocomplete: FC<AutocompleteProps> = ({
           setOpen(false);
         }}
         onChange={(_: any, newValue: any) => {
-          setValue(newValue);
+          if (newValue) {
+            setValue(newValue);
+          }
         }}
         inputValue={search}
         onInputChange={(_, newInputValue) => {
@@ -59,9 +61,7 @@ export const Autocomplete: FC<AutocompleteProps> = ({
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
+                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
                   {params.InputProps.endAdornment}
                 </>
               ),
