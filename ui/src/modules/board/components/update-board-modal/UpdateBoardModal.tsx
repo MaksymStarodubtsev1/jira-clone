@@ -22,7 +22,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, se
 
   useEffect(() => {
     if (board?.title) {
-      setTitle(board?.title);
+      setTitle(board.title);
     }
   }, [board?.title]);
 
@@ -46,6 +46,32 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, se
     });
   };
 
+  const dialogContent = updateNewBoardMutation.isLoading ? (
+    <Loading />
+  ) : (
+    <>
+      <DialogTitle>{`Update ${board?.title} board`}</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          required
+          label="title"
+          type="text"
+          fullWidth
+          variant="standard"
+          value={title}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setTitle(event.target.value);
+          }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
+        <Button onClick={() => handleUpdateBoard({ ...board, title })}>Update</Button>
+      </DialogActions>
+    </>
+  );
+
   return (
     <>
       <Button variant="outlined" disabled={disabledFields} onClick={() => setIsUpdateModalOpen(true)}>
@@ -62,31 +88,7 @@ export const UpdateBoardModal: FC<UpdateBoardModalProps> = ({ board, loading, se
           setIsUpdateModalOpen(false);
         }}
       >
-        {updateNewBoardMutation.isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <DialogTitle>{`Update ${board?.title} board`}</DialogTitle>
-            <DialogContent>
-              <TextField
-                autoFocus
-                required
-                label="title"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={title}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setTitle(event.target.value);
-                }}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setIsUpdateModalOpen(false)}>Cancel</Button>
-              <Button onClick={() => handleUpdateBoard({ ...board, title })}>Update</Button>
-            </DialogActions>
-          </>
-        )}
+        {dialogContent}
       </Dialog>
     </>
   );

@@ -1,8 +1,7 @@
 import { FC, SetStateAction, useState } from 'react';
 import { useMutation } from 'react-query';
 
-import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
-import type { PaperProps } from '@mui/material';
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
 import { createBoard } from '../../../../apis/Board';
@@ -25,13 +24,13 @@ export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard })
     },
   });
 
-  const disabledFields = createNewBoardMutation.isLoading;
-
   const handleCreateBoard = (title: string) => {
     createNewBoardMutation.mutate({
       title,
     });
   };
+
+  const disabledFields = createNewBoardMutation.isLoading;
 
   const createCardModalProps: PaperProps = {
     component: 'form',
@@ -44,6 +43,21 @@ export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard })
       handleCreateBoard(title);
     },
   };
+
+  const dialogContent = disabledFields ? (
+    <Loading />
+  ) : (
+    <>
+      <DialogTitle>Create new board</DialogTitle>
+      <DialogContent>
+        <TextField autoFocus required id="title" name="title" label="title" type="text" fullWidth variant="standard" />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
+        <Button type="submit">Create</Button>
+      </DialogActions>
+    </>
+  );
 
   return (
     <>
@@ -63,30 +77,7 @@ export const CreateBoardModal: FC<CreateBoardModalProps> = ({ setCurrentBoard })
         }}
         PaperProps={createCardModalProps}
       >
-        {disabledFields ? (
-          <Loading />
-        ) : (
-          <>
-            <DialogTitle>Create new board</DialogTitle>
-            <DialogContent>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="title"
-                name="title"
-                label="title"
-                type="text"
-                fullWidth
-                variant="standard"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
-              <Button type="submit">Create</Button>
-            </DialogActions>
-          </>
-        )}
+        {dialogContent}
       </Dialog>
     </>
   );

@@ -1,27 +1,16 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
-import styles from './Board.module.scss';
 import { BoardView } from './components/board-view';
-import { CreateBoardModal } from './components/create-board-modal';
-import { UpdateBoardModal } from './components/update-board-modal';
-import { DeleteBoardModal } from './components/delete-board-modal';
+import { BoardInfo } from './components/board-info/BoardInfo';
+import styles from './Board.module.scss';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { getBoards } from '../../apis/Board';
 import { useDebounce } from '../../utils';
-import { Typography } from '@mui/material';
+import { Ticket } from '../../shared/types';
 
-export interface Ticket {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export const Home = () => {
-  const [currentBoard, setCurrentBoard] = useState<{
-    id: string;
-    title: string;
-  }>();
+export const Board = () => {
+  const [currentBoard, setCurrentBoard] = useState<Ticket>();
   const [search, setSearch] = useState<string>();
 
   const searchValue = useDebounce(search?.trim());
@@ -42,18 +31,7 @@ export const Home = () => {
         setSearch={setSearch}
         setValue={setCurrentBoard}
       />
-      <div className={styles.info}>
-        {currentBoard && (
-          <Typography variant="h4" display="block">
-            {currentBoard.title}
-          </Typography>
-        )}
-        <div className={styles.actions}>
-          <CreateBoardModal setCurrentBoard={setCurrentBoard} />
-          <UpdateBoardModal board={currentBoard} loading={boardsQuery.isLoading} setCurrentBoard={setCurrentBoard} />
-          <DeleteBoardModal board={currentBoard} loading={boardsQuery.isLoading} setCurrentBoard={setCurrentBoard} />
-        </div>
-      </div>
+      <BoardInfo currentBoard={currentBoard} setCurrentBoard={setCurrentBoard} loading={boardsQuery.isLoading} />
       <BoardView boardId={currentBoard?.id} />
     </div>
   );

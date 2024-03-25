@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { QueryClientProvider } from 'react-query';
 
-import { Home } from './modules/board';
+import { Board } from './modules/board';
 import { queryClient } from '../src/core/http-client';
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <QueryClientProvider client={queryClient}>
         <ScopedCssBaseline />
-        <Home />
+        <Board />
       </QueryClientProvider>
     </DndProvider>
   );

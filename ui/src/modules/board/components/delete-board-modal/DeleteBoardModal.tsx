@@ -1,8 +1,7 @@
 import { FC, SetStateAction, useState } from 'react';
 import { useMutation } from 'react-query';
 
-import { Button, DialogTitle, DialogActions, Dialog } from '@mui/material';
-import type { PaperProps } from '@mui/material';
+import { Button, DialogTitle, DialogActions, Dialog, PaperProps } from '@mui/material';
 
 import { queryClient } from '../../../../core/http-client';
 import { deleteBoard } from '../../../../apis/Board';
@@ -46,6 +45,18 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, se
     },
   };
 
+  const dialogContent = deleteBoardMutation.isLoading ? (
+    <Loading />
+  ) : (
+    <>
+      <DialogTitle>{`Are you sure you whant to delete ${board?.title} board`}</DialogTitle>
+      <DialogActions>
+        <Button onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
+        <Button type="submit">Delete</Button>
+      </DialogActions>
+    </>
+  );
+
   return (
     <>
       <Button variant="contained" color="error" disabled={disabledFields} onClick={() => setIsDeleteModalOpen(true)}>
@@ -63,17 +74,7 @@ export const DeleteBoardModal: FC<DeleteBoardModalProps> = ({ board, loading, se
         }}
         PaperProps={deleteCardModalProps}
       >
-        {deleteBoardMutation.isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <DialogTitle>{`Are you sure you whant to delete ${board?.title} board`}</DialogTitle>
-            <DialogActions>
-              <Button onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
-              <Button type="submit">Delete</Button>
-            </DialogActions>
-          </>
-        )}
+        {dialogContent}
       </Dialog>
     </>
   );

@@ -1,17 +1,14 @@
-import { BoardColumn } from '../column/BoardColumn';
+import { FC } from 'react';
+import { useQuery } from 'react-query';
+
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import styles from './BoardView.module.scss';
-import { useQuery } from 'react-query';
-import { getBoard } from '../../../../apis/Board';
-import { FC } from 'react';
 
-export interface Ticket {
-  id: string;
-  title: string;
-  description: string;
-}
+import styles from './BoardView.module.scss';
+import { BoardColumn } from '../column/BoardColumn';
+import { getBoard } from '../../../../apis/Board';
+import type { Board } from '../../../../shared/types';
 
 interface BoardProps {
   boardId?: string;
@@ -44,16 +41,12 @@ export const BoardView: FC<BoardProps> = ({ boardId }) => {
     );
   }
 
-  const columnsList = boardQuery.data?.data.columns || [];
+  const columnsList: Board['columns'] = boardQuery.data?.data.columns || [];
 
   return (
     <div className={styles.root}>
       {columnsList.map((column, index) => (
-        <BoardColumn
-          key={column.id}
-          column={column}
-          canAddTicket={index === 0}
-        />
+        <BoardColumn key={column.id} column={column} canAddTicket={index === 0} />
       ))}
     </div>
   );

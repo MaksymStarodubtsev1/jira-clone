@@ -1,44 +1,24 @@
 import { FC, useState } from 'react';
+import { useMutation } from 'react-query';
 import { useDrop } from 'react-dnd';
 
-import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField } from '@mui/material';
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../card/BoardCard';
-import { Ticket } from '../../Board';
 import { queryClient } from '../../../../core/http-client';
-import { useMutation } from 'react-query';
 import { createCardInColumn } from '../../../../apis/Card';
-import type { PaperProps } from '@mui/material';
+import type { Column } from '../../../../shared/types';
+import { ItemTypes } from '../../../../shared/constans';
 
-export const ItemTypes = {
-  BOX: 'box',
-};
 
 interface BoardColumnProps {
-  column: {
-    id: string;
-    title: string;
-    cards?: Ticket[];
-  };
+  column: Column;
   canAddTicket?: boolean;
 }
 
 export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true }) => {
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.BOX,
-    drop: () => column,
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  }));
-
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-  const handleChangeCreateModalVisibility = (open: boolean) => {
-    setIsCreateModalOpen(open);
-  };
 
   const deleteCardMutation = useMutation(createCardInColumn, {
     onSuccess: () => {
@@ -52,8 +32,18 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
       title,
       description,
     });
-    handleChangeCreateModalVisibility(false);
+
+    setIsCreateModalOpen(false);
   };
+
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept: ItemTypes.BOX,
+    drop: () => column,
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }));
 
   const isActive = canDrop && isOver;
   let backgroundColor = '#ccc';
@@ -80,32 +70,24 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
   };
 
   return (
-    <div
-      className={styles.root}
-      key={column.id}
-      ref={drop}
-      style={{ backgroundColor }}
-      onClick={() => {}}
-      role="button"
-    >
+    <div className={styles.root} key={column.id} ref={drop} style={{ backgroundColor }}>
       <div className={styles.title}>{column.title}</div>
       <div className={styles.content}>
-        {column.cards?.map((ticket: Ticket) => (
+        {column.cards?.map((ticket) => (
           <BoardCard key={ticket.id} item={ticket} />
         ))}
         {canAddTicket && (
-          <Button variant="outlined" onClick={() => handleChangeCreateModalVisibility(true)}>
+          <Button variant="outlined" onClick={() => setIsCreateModalOpen(true)}>
             Add new ticket
           </Button>
         )}
       </div>
-      <Dialog open={isCreateModalOpen} onClose={() => handleChangeCreateModalVisibility(false)} PaperProps={paperProps}>
+      <Dialog open={isCreateModalOpen} PaperProps={paperProps} onClose={() => setIsCreateModalOpen(false)}>
         <DialogTitle>Create new ticket</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             required
-            margin="dense"
             id="title"
             name="title"
             label="title"
@@ -115,7 +97,6 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
           />
           <TextField
             required
-            margin="dense"
             id="description"
             name="description"
             label="description"
@@ -125,7 +106,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleChangeCreateModalVisibility(false)}>Cancel</Button>
+          <Button onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
           <Button type="submit">Create</Button>
         </DialogActions>
       </Dialog>
