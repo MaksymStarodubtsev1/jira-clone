@@ -13,7 +13,8 @@
       "@assets/*": ["assets/*"],
       "@core/*": ["core/*"],
       "@modules/*": ["modules/*"],
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["shared/*"],
+      "@utils/*": ["utils/*"]
     },
     /* Bundler mode */
     "allowJs":true,

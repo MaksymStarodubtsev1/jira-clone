@@ -1,5 +1,5 @@
-import { getHTTPClient } from '../core/http-client';
-import { Ticket } from '../shared/types';
+import { getHTTPClient } from '@core/http-client';
+import { Ticket } from '@shared/types';
 
 const $http = getHTTPClient();
 

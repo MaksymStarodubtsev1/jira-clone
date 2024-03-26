@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
+import { Autocomplete } from '@shared/components/autocomplete';
+import { getBoards } from '@apis/Board';
+import { Board } from '@shared/types';
+
 import { TicketBoard } from './components/ticket-board';
 import { BoardInfo } from './components/board-info/BoardInfo';
-import styles from './Board.module.scss';
-import { Autocomplete } from '../../shared/components/autocomplete';
-import { getBoards } from '../../apis/Board';
+import styles from './BoardView.module.scss';
 import { useDebounce } from '../../utils';
-import { Board } from '../../shared/types';
 
 export const BoardView = () => {
   const [currentBoard, setCurrentBoard] = useState<Board>();

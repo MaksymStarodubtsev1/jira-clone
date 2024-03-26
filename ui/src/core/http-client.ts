@@ -1,9 +1,6 @@
 import {
   QueryClient,
   QueryKey,
-  useMutation as useReactMutation,
-  UseMutationOptions as UseReactMutationOptions,
-  UseMutationResult as UseReactMutationResult,
   useQuery as useReactQuery,
   UseQueryOptions as UseReactQueryOptions,
   UseQueryResult as UseReactQueryResult,
@@ -12,8 +9,6 @@ import {
 import Axios, {
   AxiosError,
   AxiosInstance,
-  AxiosResponse,
-  CancelTokenSource,
 } from 'axios';
 
 import { getBaseUrl } from './base-url';

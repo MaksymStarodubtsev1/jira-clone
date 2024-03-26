@@ -1,4 +1,4 @@
-import { getHTTPClient } from '../core/http-client';
+import { getHTTPClient } from '@core/http-client';
 
 const $http = getHTTPClient();
 
