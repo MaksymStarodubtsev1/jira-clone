@@ -4,6 +4,9 @@
   "description": "",
   "main": ".eslintrc.js",
   "scripts": {
+    "build": "npm run build:ui && npm run build:server",
+    "build:ui": "cd ui && npm run build",
+    "build:server": "cd server && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

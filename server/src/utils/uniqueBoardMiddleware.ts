@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 
-import prisma from '../prisma/client';
+import prisma from '../../prisma/client';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
