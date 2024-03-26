@@ -1,8 +1,8 @@
 import { body, param } from 'express-validator';
 
 const minIdLength = 9;
-const minTitleLength = 3;
-const minDescriptionLength = 5;
+const minTitleLength = 1;
+const minDescriptionLength = 1;
 
 export const createCardValidation = [
   body('columnId').isLength({ min: minIdLength }),
