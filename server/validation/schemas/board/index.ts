@@ -1,7 +1,7 @@
 import { body, param } from 'express-validator';
 
 const minIdLength = 9;
-const minTitleLength = 2;
+const minTitleLength = 1;
 
 export const createBoardValidation = [
   body('title').isLength({ min: minTitleLength })
