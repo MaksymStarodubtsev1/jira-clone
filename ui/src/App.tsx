@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { QueryClientProvider } from 'react-query';
 
 import { BoardView } from './modules/board';
-import { queryClient } from '../src/core/http-client';
+import { queryClient } from '@core/http-client';
 
 function App() {
   return (
