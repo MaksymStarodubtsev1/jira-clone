@@ -1,0 +1,37 @@
+{
+  "root": true,
+  "settings": {
+    "import/internal-regex": "^@(apis|assets|core|modules|shared)/"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "tsconfigRootDir": ".",
+    "project": ["./tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "import"],
+  "extends": ["eslint:recommended", "plugin:react-hooks/recommended", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "no-unused-expressions": ["error", { "allowShortCircuit": false }],
+    "no-unsafe-optional-chaining": "error",
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": true,
+        "ignoreDeclarationSort": true
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [["external", "builtin"], "internal", ["sibling", "parent"], "index"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  }
+}

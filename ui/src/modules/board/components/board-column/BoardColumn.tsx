@@ -3,13 +3,13 @@ import { useMutation } from 'react-query';
 import { useDrop } from 'react-dnd';
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
+import { queryClient } from '@core/http-client';
+import { createCardInColumn } from '@apis/Card';
+import type { Column } from '@shared/types';
+import { ItemTypes } from '@shared/constans';
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../board-card/BoardCard';
-import { queryClient } from '../../../../core/http-client';
-import { createCardInColumn } from '../../../../apis/Card';
-import type { Column } from '../../../../shared/types';
-import { ItemTypes } from '../../../../shared/constans';
 
 interface BoardColumnProps {
   column: Column;
@@ -98,6 +98,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
             required
             id="description"
             name="description"
+            margin="dense"
             label="description"
             type="text"
             fullWidth

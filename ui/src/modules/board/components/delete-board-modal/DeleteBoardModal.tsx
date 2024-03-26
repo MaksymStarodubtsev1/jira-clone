@@ -2,11 +2,10 @@ import { FC, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogActions, Dialog, PaperProps } from '@mui/material';
-
-import { queryClient } from '../../../../core/http-client';
-import { deleteBoard } from '../../../../apis/Board';
-import { Loading } from '../../../../shared/components/loading';
-import type { Board } from '../../../../shared/types';
+import { queryClient } from '@core/http-client';
+import { deleteBoard } from '@apis/Board';
+import { Loading } from '@shared/components/loading';
+import type { Board } from '@shared/types';
 
 interface DeleteBoardModalProps {
   board?: Board;

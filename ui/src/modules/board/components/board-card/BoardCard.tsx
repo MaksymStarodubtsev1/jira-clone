@@ -15,12 +15,13 @@ import {
   Typography,
 } from '@mui/material';
 
+import { deleteCardById, editCardById, moveCardToColumnById } from '@apis/Card';
+import { queryClient } from '@core/http-client';
+import { Loading } from '@shared/components/loading';
+import { Ticket } from '@shared/types/index';
+import { ItemTypes } from '@shared/constans';
+
 import styles from './BoardCard.module.scss';
-import { deleteCardById, editCardById, moveCardToColumnById } from '../../../../apis/Card';
-import { queryClient } from '../../../../core/http-client';
-import { Loading } from '../../../../shared/components/loading';
-import { Ticket } from '../../../../shared/types/index';
-import { ItemTypes } from '../../../../shared/constans';
 
 export interface BoardCardProps {
   item: Ticket;
@@ -103,6 +104,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item }) => {
           required
           label="description"
           type="text"
+          margin="dense"
           fullWidth
           variant="standard"
           value={updatedCard.description}

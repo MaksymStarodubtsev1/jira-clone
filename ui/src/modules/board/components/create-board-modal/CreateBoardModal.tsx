@@ -2,11 +2,10 @@ import { FC, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
-
-import { queryClient } from '../../../../core/http-client';
-import { createBoard } from '../../../../apis/Board';
-import { Loading } from '../../../../shared/components/loading';
-import type { Board } from '../../../../shared/types';
+import { queryClient } from '@core/http-client';
+import { createBoard } from '@apis/Board';
+import { Loading } from '@shared/components/loading';
+import type { Board } from '@shared/types';
 
 interface CreateBoardModalProps {
   setCurrentBoard: (value: Board) => void;

@@ -4,11 +4,11 @@ import { useQuery } from 'react-query';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { getBoard } from '@apis/Board';
+import type { Board } from '@shared/types';
 
 import styles from './TicketBoard.module.scss';
 import { BoardColumn } from '../board-column/BoardColumn';
-import { getBoard } from '../../../../apis/Board';
-import type { Board } from '../../../../shared/types';
 
 interface TicketBoardProps {
   boardId?: string;

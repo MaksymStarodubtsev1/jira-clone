@@ -1,12 +1,12 @@
 import { FC } from 'react';
 
 import { Typography } from '@mui/material';
+import { Board } from '@shared/types';
 
 import styles from './BoardInfo.module.scss';
 import { CreateBoardModal } from '../create-board-modal';
 import { UpdateBoardModal } from '../update-board-modal';
 import { DeleteBoardModal } from '../delete-board-modal';
-import { Board } from '../../../../shared/types';
 
 interface BoardInfoProps {
   currentBoard?: Board;
