@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const port = 8001;
+const port = process.env.BACKEND_URL || 8001;
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
