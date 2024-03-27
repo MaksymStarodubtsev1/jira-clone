@@ -7,6 +7,8 @@
     "build": "npm run build:ui && npm run build:server",
     "build:ui": "cd ui && npm run build",
     "build:server": "cd server && npm run build",
+    "docker:build": "docker build -t my-app .",
+    "docker:run": "docker run -p 8000:80 my-app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

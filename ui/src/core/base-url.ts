@@ -1,15 +1,15 @@
 const baseUrls = {
   dev: {
     reactApp: 'http://localhost:8000',
-    proxy: 'http://localhost:8000',
+    proxy: 'http://localhost:8001',
   },
   test: {
     reactApp: 'http://localhost:8000',
-    proxy: 'http://localhost:8000',
+    proxy: 'http://localhost:8001',
   },
   production: {
     reactApp: 'http://localhost:8000',
-    proxy: 'http://localhost:8000',
+    proxy: 'http://localhost:8001',
   },
 };
 
