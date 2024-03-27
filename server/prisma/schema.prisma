@@ -6,12 +6,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["mongodb"]
+  previewFeatures = []
 }
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+  url      = "mongodb+srv://admin:fxrog96tV3nt93wF@jiraclone.zfma8xu.mongodb.net/jiraClone"
 }
 
 enum CardStatus {

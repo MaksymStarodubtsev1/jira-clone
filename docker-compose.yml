@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  ultra-backend:
+    restart: always
+    build: ./server
+    container_name: ultra-backend
+    ports:
+      - "3000:8001"
+    environment:
+      - DB_USER=ultra
+      - DB_PASSWORD=ultra
+      - DB_NAME=ultra-prod
+      - DATABASE_URL="mongodb+srv://admin:fxrog96tV3nt93wF@jiraclone.zfma8xu.mongodb.net/jiraClone"
+  ultra-frontend:
+    restart: always
+    build: ./ui
+    container_name: ultra-frontend
+    links:
+      - "ultra-backend:backend"
+    ports:
+      - "3001:80"
+    environment:
+      - REST_API_URL=http://backend:3000

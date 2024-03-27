@@ -10,6 +10,7 @@
     "build": "npx tsc",
     "start": "node src/index.ts",
     "dev": "nodemon src/index.ts",
+    "preview": "node dist/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
