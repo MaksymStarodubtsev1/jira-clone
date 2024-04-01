@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM node:18
+FROM node:lts-alpine AS build
 
 # Create app directory
 WORKDIR /usr/src/app
