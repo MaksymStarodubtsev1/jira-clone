@@ -1,3 +1,5 @@
+#!/bin/bash
+
 FROM node:lts-alpine AS build
 
 WORKDIR /app

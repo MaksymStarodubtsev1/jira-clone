@@ -1,3 +1,4 @@
+#!/bin/bash
 FROM node:18
 
 # Create app directory
