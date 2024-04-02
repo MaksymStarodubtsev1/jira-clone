@@ -8,7 +8,7 @@ services:
     ports:
       - "3000:8001"
     environment:
-      - DATABASE_URL="mongodb+srv://admin:fxrog96tV3nt93wF@jiraclone.zfma8xu.mongodb.net/jiraClone"
+      - DATABASE_URL=""
   jira-frontend:
     restart: always
     build: ./ui
