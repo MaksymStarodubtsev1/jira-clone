@@ -1,4 +1,4 @@
-import {FC, useCallback, useEffect, useState} from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDrop } from 'react-dnd';
 import update from 'immutability-helper'
@@ -11,9 +11,7 @@ import { ItemTypes } from '@shared/constans';
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../board-card/BoardCard';
-import update from "immutability-helper";
-import {Card} from "@modules/card/Card";
-import {Item} from "@modules/card/Container";
+import {Ticket} from "@shared/types";
 
 interface BoardColumnProps {
   column: Column;
@@ -90,24 +88,15 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
   }, [])
 
   const renderCard = useCallback(
-      (card: { id: number; text: string }, index: number) => {
+      (card: Ticket, index: number) => {
         return (
-            <Card
+            <BoardCard
                 key={card.id}
+                item={card}
                 index={index}
                 id={card.id}
-                text={card.title}
                 moveCard={moveCard}
             />
-        )
-      },
-      [],
-  )
-
-  const renderCardd = useCallback(
-      (card, index: number) => {
-        return (
-            <BoardCard key={card.id} item={card} index={index} moveCard={moveCard}/>
         )
       },
       [],
@@ -118,7 +107,6 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
       <div className={styles.title}>{column.title}</div>
       <div className={styles.content}>
         {cards?.map((card, i) => renderCard(card, i))}
-        {cards?.map((card, i) => renderCardd(card, i))}
         {canAddTicket && (
           <Button variant="outlined" onClick={() => setIsCreateModalOpen(true)}>
             Add new ticket

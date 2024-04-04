@@ -1,7 +1,7 @@
 import update from 'immutability-helper'
 import type { FC } from 'react'
 import {useCallback, useEffect, useState} from 'react'
-import {Card} from "@modules/card/Card";
+import {Card} from "@modules/board/components/board-card/BoardCard";
 
 
 const style = {
