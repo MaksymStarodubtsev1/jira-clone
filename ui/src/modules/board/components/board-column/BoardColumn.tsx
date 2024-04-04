@@ -1,6 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDrop } from 'react-dnd';
+import update from 'immutability-helper'
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, TextField, PaperProps } from '@mui/material';
 import { queryClient } from '@core/http-client';
@@ -10,6 +11,7 @@ import { ItemTypes } from '@shared/constans';
 
 import styles from './BoardColumn.module.scss';
 import { BoardCard } from '../board-card/BoardCard';
+import {Ticket} from "@shared/types";
 
 interface BoardColumnProps {
   column: Column;
@@ -36,7 +38,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
   };
 
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.BOX,
+    accept: ItemTypes.CARD,
     drop: () => column,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -68,13 +70,43 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
     },
   };
 
+  const [cards, setCards] = useState(column.cards)
+
+  useEffect(() => {
+    setCards(column.cards)
+  }, [column.cards])
+
+  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+    setCards((prevCards) =>
+        update(prevCards, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, prevCards[dragIndex]],
+          ],
+        }),
+    )
+  }, [])
+
+  const renderCard = useCallback(
+      (card: Ticket, index: number) => {
+        return (
+            <BoardCard
+                key={card.id}
+                item={card}
+                index={index}
+                id={card.id}
+                moveCard={moveCard}
+            />
+        )
+      },
+      [],
+  )
+
   return (
     <div className={styles.root} key={column.id} ref={drop} style={{ backgroundColor }}>
       <div className={styles.title}>{column.title}</div>
       <div className={styles.content}>
-        {column.cards?.map((ticket) => (
-          <BoardCard key={ticket.id} item={ticket} />
-        ))}
+        {cards?.map((card, i) => renderCard(card, i))}
         {canAddTicket && (
           <Button variant="outlined" onClick={() => setIsCreateModalOpen(true)}>
             Add new ticket

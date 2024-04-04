@@ -2,6 +2,8 @@ export interface Ticket {
   id: string;
   title: string;
   description: string;
+  index?: number
+  columnId: string
 }
 
 export interface Column {

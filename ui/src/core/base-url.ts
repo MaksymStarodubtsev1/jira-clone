@@ -1,3 +1,3 @@
 export const getBaseUrl = () => {
-  return "https://maksym-backend.entityseven.com/"
+  return "http://localhost:8001"
 };
