@@ -91,10 +91,10 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
       (card: Ticket, index: number) => {
         return (
             <BoardCard
-                key={card.id}
+                key={card?.id}
                 item={card}
                 index={index}
-                id={card.id}
+                id={card?.id}
                 moveCard={moveCard}
             />
         )
