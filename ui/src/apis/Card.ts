@@ -9,6 +9,10 @@ interface newCard {
   columnId: string;
 }
 
+export interface EditCardProps extends Partial<Ticket> {
+  id: string;
+}
+
 export const createCardInColumn = (cardInfo: newCard) => {
   return $http.post(`/card`, cardInfo);
 };
@@ -19,7 +23,7 @@ export const moveCardToColumnById = ({ columnId, cardId }: { [key: string]: stri
   });
 };
 
-export const editCardById = ({ id, ...details }: Ticket) => {
+export const editCardById = ({ id, ...details }: EditCardProps) => {
   return $http.patch(`/card/${id}`, details);
 };
 

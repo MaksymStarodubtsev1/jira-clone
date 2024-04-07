@@ -21,7 +21,7 @@ export const create = async (req: Request, res: Response) => {
     res.status(200).json(newBoard);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: 'Error creating board' });
+    res.status(200).json({ error: 'Error creating board' });
   }
 };
 
@@ -70,19 +70,25 @@ export const remove = async (req: Request, res: Response) => {
   }
 };
 
-export const getOne = async (req: Request, res: Response) => {
+export const getBoard = async (req: Request, res: Response) => {
   try {
-    if (!req.query.id) {
+    if (!req.params.id) {
       return res.status(422).json({ message: 'Missing required field: id' });
     }
 
     const board = await prisma.board.findUnique({
       where: {
-        id: req.query.id.toString(),
+        id: req.params.id.toString(),
       },
       include: {
         columns: {
-          include: { cards: true },
+          include: {
+            cards: {
+              orderBy: {
+                order: 'desc',
+              },
+            }
+          },
         },
       },
     });

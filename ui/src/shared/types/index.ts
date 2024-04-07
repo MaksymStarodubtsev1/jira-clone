@@ -2,8 +2,9 @@ export interface Ticket {
   id: string;
   title: string;
   description: string;
-  index?: number
-  columnId: string
+  index?: number;
+  columnId: string;
+  order: number;
 }
 
 export interface Column {

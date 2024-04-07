@@ -1,20 +1,10 @@
 import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import prisma from "../prisma/client";
 
-import { CardController, BoardController } from './controllers';
-import { uniqueBoardMiddleware } from './utils';
-import {
-  createBoardValidation,
-  removeBoardValidation,
-  updateBoardValidation,
-} from './validation/schemas/board';
-import handleValidationError from './validation/utils/handleValidationError';
-import {
-  createCardValidation,
-  removeCardValidation,
-  updateCardValidation,
-} from './validation/schemas/card';
+import board from "./routes/board";
+import card from "./routes/card";
 
 dotenv.config();
 
@@ -29,48 +19,22 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
 
-app.post(
-  '/board',
-  createBoardValidation,
-  handleValidationError,
-  uniqueBoardMiddleware,
-  BoardController.create
-);
-app.get('/board', BoardController.getOne);
-app.get('/boards', BoardController.getMany);
-app.patch(
-  '/board/:id',
-  updateBoardValidation,
-  handleValidationError,
-  uniqueBoardMiddleware,
-  BoardController.update
-);
-app.delete(
-  '/board/:id',
-  removeBoardValidation,
-  handleValidationError,
-  BoardController.remove
-);
+app.use('/board', board);
+app.use('/card', card)
 
-app.post(
-  '/card',
-  createCardValidation,
-  handleValidationError,
-  CardController.create
-);
-app.patch(
-  '/card/:id',
-  updateCardValidation,
-  handleValidationError,
-  CardController.update
-);
-app.delete(
-  '/card/:id',
-  removeCardValidation,
-  handleValidationError,
-  CardController.remove
-);
+app.get('*', (req: Request, res: Response) => {
+  res.status(404).json({ error: 'Route not found!' })
+})
 
-app.listen(port, () => {
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ error: 'Route not found!' });
+})
+
+app.listen(port, async () => {
+  prisma.$connect()
+      .then(() => console.log('Database connected!'))
+      .catch(() => console.log('Database connection error!'))
+
   console.log(`Server is Fire at http://localhost:${port}`);
 });
+

@@ -28,6 +28,7 @@ export const update = async (req: Request, res: Response) => {
       data: {
         ...(req.body.title && { title: req.body.title }),
         ...(req.body.description && { description: req.body.description }),
+        ...(req.body.order && { order: req.body.order }),
         ...(req.body.columnId && {
           column: { connect: { id: req.body.columnId } },
         }),

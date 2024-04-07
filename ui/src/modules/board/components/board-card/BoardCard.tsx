@@ -5,7 +5,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import {ItemTypes} from "@shared/constans";
 import {Ticket} from "@shared/types";
 import {useMutation} from "react-query";
-import {deleteCardById, editCardById, moveCardToColumnById} from "@apis/Card";
+import {deleteCardById, editCardById, EditCardProps, moveCardToColumnById} from "@apis/Card";
 import {queryClient} from "@core/http-client";
 import styles from "@modules/board/components/board-card/BoardCard.module.scss";
 import {
@@ -38,6 +38,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
     const ref = useRef<HTMLDivElement>(null)
     const [isEditable, setIsEditable] = useState(false);
     const [updatedCard, setUpdatedCard] = useState(item);
+    const [initialIndex, setinitialIndex] = useState(index)
 
     const handleCloseEditModal = () => setIsEditable(false);
 
@@ -46,6 +47,12 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
             queryClient.invalidateQueries('board');
         },
         onSettled: handleCloseEditModal,
+    });
+
+    const changeOrderCardMutation = useMutation(editCardById, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('board');
+        },
     });
 
     const deleteCardMutation = useMutation(deleteCardById, {
@@ -137,6 +144,9 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
                     cardId: item.id,
                 });
             }
+            console.log('itemresult',item.index - initialIndex)
+            handleChangeCardOrder({id, order: item.index - initialIndex})
+            setinitialIndex(() => item.index)
         },
     })
 
@@ -144,8 +154,12 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
     const cursor = isEditable ? 'text' : 'move';
     const disabledFields = editCardMutation.isLoading;
 
-    const handleUpdateCard = (updatedCardDetails: Ticket) => {
+    const handleUpdateCardInfo = (updatedCardDetails: Ticket) => {
         editCardMutation.mutate(updatedCardDetails);
+    };
+
+    const handleChangeCardOrder = (updatedCardDetails: EditCardProps) => {
+        changeOrderCardMutation.mutate(updatedCardDetails);
     };
 
     const handleRemoveCard = () => {
@@ -185,7 +199,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseEditModal}>Cancel</Button>
-                <Button onClick={() => handleUpdateCard(updatedCard)}>Save</Button>
+                <Button onClick={() => handleUpdateCardInfo(updatedCard)}>Save</Button>
             </DialogActions>
         </>
     );
