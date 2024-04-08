@@ -72,13 +72,9 @@ export const remove = async (req: Request, res: Response) => {
 
 export const getBoard = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id) {
-      return res.status(422).json({ message: 'Missing required field: id' });
-    }
-
     const board = await prisma.board.findUnique({
       where: {
-        id: req.params.id.toString(),
+        id: req.params.id,
       },
       include: {
         columns: {
@@ -104,16 +100,16 @@ export const getBoard = async (req: Request, res: Response) => {
   }
 };
 
-export const getMany = async (req: Request, res: Response) => {
+export const getBoardBySymbol = async (req: Request, res: Response) => {
   try {
-    if (!req.query.title) {
-      return res.status(400).json({ message: 'Missing required field: title' });
+    if (!req.params.symbol) {
+      return res.status(400).json({ message: 'Missing required field: symbol' });
     }
 
     const board = await prisma.board.findMany({
       where: {
         title: {
-          startsWith: req.query.title.toString(),
+          startsWith: req.params.symbol,
           mode: 'insensitive',
         },
       },

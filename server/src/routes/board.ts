@@ -14,8 +14,8 @@ router.post(
     uniqueBoardMiddleware,
     BoardController.create
 );
+router.get('/findBySymbol/:symbol', BoardController.getBoardBySymbol);
 router.get('/:id', BoardController.getBoard);
-router.get('/all', BoardController.getMany);
 router.patch(
     '/:id',
     updateBoardValidation,
