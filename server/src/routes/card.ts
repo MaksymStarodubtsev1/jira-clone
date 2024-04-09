@@ -16,6 +16,9 @@ router.patch(
     handleValidationError,
     CardController.update
 );
+
+router.patch('/reorder/ids', CardController.reorder);
+
 router.delete(
     '/:id',
     removeCardValidation,

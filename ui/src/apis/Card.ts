@@ -13,6 +13,15 @@ export interface EditCardProps extends Partial<Ticket> {
   id: string;
 }
 
+type CardsIdsList = Pick<Ticket, 'id'>[]
+
+export interface ChangeCardsOrderByIdsProps {
+  idsList: CardsIdsList;
+  currentElement: Ticket;
+  prevElement: Ticket;
+  nextElement: Ticket;
+}
+
 export const createCardInColumn = (cardInfo: newCard) => {
   return $http.post(`/card`, cardInfo);
 };
@@ -25,6 +34,11 @@ export const moveCardToColumnById = ({ columnId, cardId }: { [key: string]: stri
 
 export const editCardById = ({ id, ...details }: EditCardProps) => {
   return $http.patch(`/card/${id}`, details);
+};
+
+export const reorderCardsByIds = (details: ChangeCardsOrderByIdsProps) => {
+  console.log('details', details)
+  return $http.patch(`/card/reorder/ids`, details);
 };
 
 export const deleteCardById = (cardId: string) => {

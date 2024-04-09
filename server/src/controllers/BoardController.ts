@@ -81,7 +81,7 @@ export const getBoard = async (req: Request, res: Response) => {
           include: {
             cards: {
               orderBy: {
-                order: 'desc',
+                order: 'asc',
               },
             }
           },

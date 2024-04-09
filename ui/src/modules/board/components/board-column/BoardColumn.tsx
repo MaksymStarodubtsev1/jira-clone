@@ -91,6 +91,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
       (card: Ticket, index: number) => {
         return (
             <BoardCard
+                cards={cards}
                 key={card?.id}
                 item={card}
                 index={index}
@@ -99,7 +100,7 @@ export const BoardColumn: FC<BoardColumnProps> = ({ column, canAddTicket = true 
             />
         )
       },
-      [],
+      [cards],
   )
 
   return (
