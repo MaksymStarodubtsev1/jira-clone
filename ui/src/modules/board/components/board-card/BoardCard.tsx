@@ -140,7 +140,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
         },
     })
 
-    const opacity = isDragging ? 0 : 1
+    const opacity = isDragging ? 0.4 : 1
     const cursor = isEditable ? 'text' : 'move';
     const disabledFields = editCardMutation.isLoading;
 
