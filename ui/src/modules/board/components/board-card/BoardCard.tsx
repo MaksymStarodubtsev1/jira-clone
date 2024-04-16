@@ -155,22 +155,23 @@ export const BoardCard: FC<BoardCardProps> = ({ cards, item, id, index, moveCard
         }),
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult<Ticket>();
+
             if (item && dropResult && dropResult.id !== item.columnId) {
                 moveCardToColumnMutation.mutate({
                     columnId: dropResult.id,
                     cardId: item.id,
                 });
+            } else {
+                const prevEl = cards[item.index - 1]
+                const nextEl = cards[item.index + 1]
+
+                handleReorderCardsByIds({
+                    idsList: cards.map(({ id }) => ({ id })),
+                    currentElement: cards[item.index],
+                    prevElement: prevEl || { order: 0 },
+                    nextElement: nextEl || { order: 0 },
+                })
             }
-
-            const prevEl = cards[item.index - 1]
-            const nextEl = cards[item.index + 1]
-
-            handleReorderCardsByIds({
-                idsList: cards.map(({ id }) => ({ id })),
-                currentElement: cards[item.index],
-                prevElement: prevEl || { order: 0 },
-                nextElement: nextEl || { order: 0 },
-            })
         },
     })
 
