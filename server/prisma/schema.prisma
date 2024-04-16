@@ -6,12 +6,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = []
 }
 
 datasource db {
   provider = "mongodb"
-  url      = "mongodb+srv://admin:fxrog96tV3nt93wF@jiraclone.zfma8xu.mongodb.net/jiraClone"
+  url      = env("DATABASE_URL")
 }
 
 enum CardStatus {
@@ -32,7 +31,7 @@ model Column {
   title     CardStatus
 
   board     Board @relation(fields: [boardId], references: [id])
-  boardId   String
+  boardId   String @db.ObjectId
 
   cards     Card[]
 }
@@ -41,6 +40,8 @@ model Card {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   description  String
+  order     Int @default(0)
+
   column    Column @relation(fields: [columnId], references: [id])
   columnId  String @db.ObjectId
 }

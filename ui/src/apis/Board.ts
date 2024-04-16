@@ -7,7 +7,11 @@ export const createBoard = ({ title }: { title: string }) => {
 };
 
 export const getBoard = (boardId?: string) => {
-  return $http.get(`/board?id=${boardId}`);
+  return $http.get(`/board/${boardId}`);
+};
+
+export const getBoards = (searchString?: string) => {
+  return $http.get(`/board/findBySymbol/${searchString}`);
 };
 
 export const updateBoard = ({ id, title }: { id: string; title: string }) => {
@@ -16,8 +20,4 @@ export const updateBoard = ({ id, title }: { id: string; title: string }) => {
 
 export const deleteBoard = (boardId?: string) => {
   return $http.delete(`/board/${boardId}`);
-};
-
-export const getBoards = (searchString?: string) => {
-  return $http.get(`/boards?title=${searchString}`);
 };

@@ -5,7 +5,12 @@ import { useDrag, useDrop } from 'react-dnd'
 import {ItemTypes} from "@shared/constans";
 import {Ticket} from "@shared/types";
 import {useMutation} from "react-query";
-import {deleteCardById, editCardById, moveCardToColumnById} from "@apis/Card";
+import {
+    ChangeCardsOrderByIdsProps,
+    deleteCardById,
+    editCardById,
+    moveCardToColumnById, reorderCardsByIds
+} from "@apis/Card";
 import {queryClient} from "@core/http-client";
 import styles from "@modules/board/components/board-card/BoardCard.module.scss";
 import {
@@ -28,13 +33,14 @@ interface DragItem {
 }
 
 export interface BoardCardProps {
+    cards: Ticket[];
     item: Ticket;
     id: string;
     index: number;
     moveCard: (dragIndex: number, hoverIndex: number) => void
 }
 
-export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => {
+export const BoardCard: FC<BoardCardProps> = ({ cards, item, id, index, moveCard }) => {
     const ref = useRef<HTMLDivElement>(null)
     const [isEditable, setIsEditable] = useState(false);
     const [updatedCard, setUpdatedCard] = useState(item);
@@ -48,6 +54,12 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
         onSettled: handleCloseEditModal,
     });
 
+    const reorderCardsByIdsMutation = useMutation(reorderCardsByIds, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('board');
+        },
+    });
+
     const deleteCardMutation = useMutation(deleteCardById, {
         onSuccess: () => {
             queryClient.invalidateQueries('board');
@@ -59,6 +71,18 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
             queryClient.invalidateQueries('board');
         },
     });
+
+    const handleUpdateCardInfo = (updatedCardDetails: Ticket) => {
+        editCardMutation.mutate(updatedCardDetails);
+    };
+
+    const handleReorderCardsByIds = (cardsDetails: ChangeCardsOrderByIdsProps) => {
+        reorderCardsByIdsMutation.mutate(cardsDetails);
+    };
+
+    const handleRemoveCard = () => {
+        deleteCardMutation.mutate(item.id);
+    };
 
     const [{ handlerId }, drop] = useDrop<
         DragItem,
@@ -137,20 +161,22 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
                     cardId: item.id,
                 });
             }
+
+            const prevEl = cards[item.index - 1]
+            const nextEl = cards[item.index + 1]
+
+            handleReorderCardsByIds({
+                idsList: cards.map(({ id }) => ({ id })),
+                currentElement: cards[item.index],
+                prevElement: prevEl || { order: 0 },
+                nextElement: nextEl || { order: 0 },
+            })
         },
     })
 
-    const opacity = isDragging ? 0.4 : 1
+    const opacity = isDragging ? 0 : 1
     const cursor = isEditable ? 'text' : 'move';
     const disabledFields = editCardMutation.isLoading;
-
-    const handleUpdateCard = (updatedCardDetails: Ticket) => {
-        editCardMutation.mutate(updatedCardDetails);
-    };
-
-    const handleRemoveCard = () => {
-        deleteCardMutation.mutate(item.id);
-    };
 
     const dialogContent = disabledFields ? (
         <Loading />
@@ -185,7 +211,7 @@ export const BoardCard: FC<BoardCardProps> = ({ item, id, index, moveCard }) => 
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseEditModal}>Cancel</Button>
-                <Button onClick={() => handleUpdateCard(updatedCard)}>Save</Button>
+                <Button onClick={() => handleUpdateCardInfo(updatedCard)}>Save</Button>
             </DialogActions>
         </>
     );
