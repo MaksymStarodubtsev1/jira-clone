@@ -1,3 +1,3 @@
 export const getBaseUrl = () => {
-  return "http://localhost:8001"
+  return import.meta.env.VITE_BACKEND_URL || "https://maksym-backend.entityseven.com/"
 };
